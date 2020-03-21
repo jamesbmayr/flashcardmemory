@@ -1,0 +1,6 @@
+/*** status ***/
+	/* visibility */
+		*[visibility=false] {
+			pointer-events: none;
+			display: none;
+		}
