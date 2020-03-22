@@ -8,16 +8,21 @@
 	var DECK = require("./deck/logic")
 	var USER = require("./user/logic")
 
-/*** database ***/
-	var DB = {
-		sessions: {},
-		users: {},
-		decks: {}
-	}
-
 /*** constants ***/
 	var ENVIRONMENT = MAIN.getEnvironment()
 	var CONSTANTS   = MAIN.getAsset("constants")
+
+/*** database ***/
+	if (ENVIRONMENT.db_url) {
+		var DB = "mongodb://" + ENVIRONMENT.db_username + ":" + ENVIRONMENT.db_password + "@" + ENVIRONMENT.db_url
+	}
+	else {
+		var DB = {
+			sessions: {},
+			users: {},
+			decks: {}
+		}
+	}
 
 /*** server ***/
 	var SERVER = HTTP.createServer(handleRequest)
@@ -140,7 +145,7 @@
 										REQUEST.post = {username: REQUEST.path[REQUEST.path.length - 1]}
 										USER.readUser(REQUEST, RESPONSE, DB, function(results) {
 											if (!results.success) {
-												_403(REQUEST, RESPONSE, "unknown error reading user " + REQUEST.path[REQUEST.path.length - 1])
+												_404(REQUEST, RESPONSE, "unknown error reading user " + REQUEST.path[REQUEST.path.length - 1])
 												return
 											}
 
@@ -165,7 +170,7 @@
 										REQUEST.post = {name: REQUEST.path[REQUEST.path.length - 1]}
 										DECK.readDeck(REQUEST, RESPONSE, DB, function(results) {
 											if (!results.success) {
-												_403(REQUEST, RESPONSE, "unknown error reading deck " + REQUEST.path[REQUEST.path.length - 1])
+												_404(REQUEST, RESPONSE, "unknown error reading deck " + REQUEST.path[REQUEST.path.length - 1])
 												return
 											}
 
@@ -197,7 +202,7 @@
 
 							// other
 								default:
-									_404()
+									_404(REQUEST, RESPONSE, REQUEST.url)
 								break
 						}
 					}

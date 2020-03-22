@@ -6,6 +6,9 @@
 
 /*** constants ***/
 	var ENVIRONMENT = getEnvironment()
+	if (ENVIRONMENT.db_url) {
+		var MONGO = require("mongodb").MongoClient
+	}
 
 /*** logs ***/
 	/* logError */
@@ -61,16 +64,22 @@
 			try {
 				if (process.env.DOMAIN !== undefined) {
 					return {
-						port:   process.env.PORT,
-						domain: process.env.DOMAIN,
-						debug:  (process.env.DEBUG || false)
+						port:        process.env.PORT,
+						domain:      process.env.DOMAIN,
+						debug:      (process.env.DEBUG || false),
+						db_username: process.env.DB_USERNAME,
+						db_password: process.env.DB_PASSWORD,
+						db_url:      process.env.DB_URL
 					}
 				}
 				else {
 					return {
-						port:   3000,
-						domain: "localhost",
-						debug:  true
+						port:        3000,
+						domain:      "localhost",
+						debug:       true,
+						db_username: null,
+						db_password: null,
+						db_url:      null
 					}
 				}
 			}
@@ -455,6 +464,12 @@
 			console.log(arguments.callee.name)
 			try {
 				// connect
+					if (ENVIRONMENT.db_url) {
+						accessMongo(DB, query, callback)
+						return
+					}
+
+				// fake database?
 					if (!DB) {
 						logError("database not found")
 						callback({success: false, message: "database not found"})
@@ -556,8 +571,8 @@
 							return
 					}
 
-				// destroy
-					if (query.command == "destroy") {
+				// remove
+					if (query.command == "remove") {
 						// all documents
 							var documentKeys = Object.keys(DB[query.collection])
 
@@ -583,6 +598,121 @@
 							callback({success: true, count: documentKeys.length})
 							return
 					}
+			}
+			catch (error) {
+				logError(error)
+				callback({success: false, message: "unable to " + arguments.callee.name})
+			}
+		}
+
+	/* accessMongo */
+		module.exports.accessMongo = accessMongo
+		function accessMongo(DB, query, callback) {
+			try {
+				MONGO.connect(DB, { useNewUrlParser: true }, function(error, client) {
+					// connect
+						var db = client.db("flashcards")
+						if (error) {
+							callback({success: false, message: error})
+							client.close()
+							return
+						}
+
+					// find
+						if (query.command == "find") {
+							// execute query
+								db.collection(query.collection).find(query.filters).toArray(function (error, documents) {
+									// error
+										if (error) {
+											callback({success: false, message: error})
+											client.close()
+											return
+										}
+
+									// no documents
+										if (!documents.length) {
+											callback({success: false, count: 0, documents: []})
+											client.close()
+											return
+										}
+
+									// yes documents
+										callback({success: true, count: documents.length, documents: documents})
+										client.close()
+										return
+								})
+						}
+
+					// insert
+						if (query.command == "insert") {
+							// execute query
+								db.collection(query.collection).insert(query.document, function (error, results) {
+									// error
+										if (error) {
+											callback({success: false, message: error})
+											client.close()
+											return
+										}
+
+									// success
+										callback({success: true, count: results.nInserted, documents: [query.document]})
+										client.close()
+										return
+								})
+						}
+
+					// update
+						if (query.command == "update") {
+							// execute query
+								db.collection(query.collection).update(query.filters, query.document, function(error, results) {
+									// error
+										if (error) {
+											callback({success: false, message: error})
+											client.close()
+											return
+										}
+
+									// find
+										db.collection(query.collection).find(query.filters).toArray(function (error, documents) {
+											// error
+												if (error) {
+													callback({success: false, message: error})
+													client.close()
+													return
+												}
+
+											// no documents
+												if (!documents.length) {
+													callback({success: false, count: 0, documents: []})
+													client.close()
+													return
+												}
+
+											// yes documents
+												callback({success: true, count: documents.length, documents: documents})
+												client.close()
+												return
+										})
+								})
+						}
+
+					// remove
+						if (query.command == "remove") {
+							db.collection(query.collection).remove(query.filters, function(error, results) {
+								// error
+									if (error) {
+										callback({success: false, message: error})
+										client.close()
+										return
+									}
+
+								// yes documents
+									callback({success: true, count: results.nRemoved})
+									client.close()
+									return
+							})
+						}
+				})
 			}
 			catch (error) {
 				logError(error)

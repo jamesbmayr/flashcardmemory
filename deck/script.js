@@ -1,12 +1,7 @@
 window.addEventListener("load", function() {
 	/*** globals ***/
-		/* triggers */
-			if ((/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i).test(navigator.userAgent)) {
-				var ON = { click: "touchstart", mousedown: "touchstart", mousemove: "touchmove", mouseup: "touchend" }
-			}
-			else {
-				var ON = { click:      "click", mousedown:  "mousedown", mousemove: "mousemove", mouseup:  "mouseup" }
-			}
+		/* function library */
+			window.FUNCTION_LIBRARY = window.FUNCTION_LIBRARY || {}
 
 		/* elements */
 			var NAVIGATION              = document.getElementById("navigation")
@@ -41,76 +36,20 @@ window.addEventListener("load", function() {
 				var GAME_END_FORM            = document.getElementById("game-end-form")
 				var GAME_END_BUTTON          = document.getElementById("game-end-button")
 
-	/*** helpers ***/
-		/* sendPost */
-			function sendPost(options, callback) {
-				// create request object and send to server
-					var request = new XMLHttpRequest()
-						request.open("POST", location.pathname, true)
-						request.onload = function() {
-							if (request.readyState !== XMLHttpRequest.DONE || request.status !== 200) {
-								callback({success: false, readyState: request.readyState, message: request.status})
-								return
-							}
-							
-							callback(JSON.parse(request.responseText) || {success: false, message: "unknown error"})
-						}
-						request.send(JSON.stringify(options))
-			}
-			
-		/* isNumLet */
-			function isNumLet(string) {
-				return (/^[a-zA-Z0-9]+$/).test(string)
-			}
-
-		/* duplicateObject */
-			function duplicateObject(object) {
-				return JSON.parse(JSON.stringify(object))
-			}
-
-		/* generateRandom */
-			function generateRandom(set, length) {
-				set = set || "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-				length = length || 32
-				
-				var output = ""
-				for (var i = 0; i < length; i++) {
-					output += (set[Math.floor(Math.random() * set.length)])
-				}
-
-				return output
-			}
-
-		/* sortRandom */
-			function sortRandom(array) {
-				// duplicate array
-					var output = duplicateObject(array)
-
-				// fisher-yates shuffle
-					var x = output.length
-					while (x > 0) {
-						var y = Math.floor(Math.random() * x)
-						x = x - 1
-						var temp = output[x]
-						output[x] = output[y]
-						output[y] = temp
-					}
-
-				return output
-			}
-
 	/*** navigation ***/
 		/* submitSearch */
-			SEARCH_FORM.addEventListener("submit", submitSearch)
-			function submitSearch(event) {
-				// validate
-					if (!SEARCH_TEXT.value || !isNumLet(SEARCH_TEXT.value) || SEARCH_TEXT.value.length < 8) {
-						SEARCH_ERROR.innerText = "deck names must be 8+ numbers and letters"
-						return
-					}
+			if (SEARCH_FORM) {
+				SEARCH_FORM.addEventListener("submit", submitSearch)
+				function submitSearch(event) {
+					// validate
+						if (!SEARCH_TEXT.value || !window.FUNCTION_LIBRARY.isNumLet(SEARCH_TEXT.value) || SEARCH_TEXT.value.length < 8) {
+							SEARCH_ERROR.innerText = "deck names must be 8+ numbers and letters"
+							return
+						}
 
-				// redirect
-					window.location = "/deck/" + SEARCH_TEXT.value
+					// redirect
+						window.location = "/deck/" + SEARCH_TEXT.value
+				}
 			}
 
 	/*** authentication ***/
@@ -124,7 +63,7 @@ window.addEventListener("load", function() {
 						}
 
 					// un-authenticate
-						sendPost(data, function(response) {
+						window.FUNCTION_LIBRARY.sendPost(data, function(response) {
 							if (!response.success) {
 								return
 							}
@@ -170,7 +109,7 @@ window.addEventListener("load", function() {
 				UPDATE_DECK_FORM.addEventListener("submit", submitUpdateDeck)
 				function submitUpdateDeck(event) {
 					// validate
-						if (!UPDATE_DECK_NAME.value || !isNumLet(UPDATE_DECK_NAME.value) || UPDATE_DECK_NAME.value.length < 8) {
+						if (!UPDATE_DECK_NAME.value || !window.FUNCTION_LIBRARY.isNumLet(UPDATE_DECK_NAME.value) || UPDATE_DECK_NAME.value.length < 8) {
 							UPDATE_DECK_ERROR.innerText = "deck name must be 8+ numbers and letters"
 							return
 						}
@@ -198,7 +137,7 @@ window.addEventListener("load", function() {
 						}
 
 					// updates
-						sendPost(data, function(response) {
+						window.FUNCTION_LIBRARY.sendPost(data, function(response) {
 							if (!response.success) {
 								UPDATE_DECK_ERROR.innerText = response.message
 								return
@@ -210,6 +149,7 @@ window.addEventListener("load", function() {
 							}
 
 							// update data
+								UPDATE_DECK_ERROR.innerText = ""
 								window.DECK = response.deck
 								HEADER.innerText = window.DECK.name
 
@@ -259,7 +199,7 @@ window.addEventListener("load", function() {
 
 		/* submitUpdateDelete */
 			if (UPDATE_DECK_FORM && DELETE_DECK_FORM) {
-				UPDATE_DECK_DELETE.addEventListener(ON.click, submitUpdateDelete)
+				UPDATE_DECK_DELETE.addEventListener("click", submitUpdateDelete)
 				function submitUpdateDelete(event) {
 					DELETE_DECK_FORM.setAttribute("visibility", true)
 				}
@@ -276,7 +216,7 @@ window.addEventListener("load", function() {
 						}
 
 					// updates
-						sendPost(data, function(response) {
+						window.FUNCTION_LIBRARY.sendPost(data, function(response) {
 							if (!response.success) {
 								DELETE_USER_ERROR.innerText = response.message
 								return
@@ -293,7 +233,7 @@ window.addEventListener("load", function() {
 				PAIR_CREATE_FORM.addEventListener("submit", submitCreatePair)
 				function submitCreatePair(event) {
 					// add pair to object
-						var id = generateRandom()
+						var id = window.FUNCTION_LIBRARY.generateRandom()
 						var pair = {
 							id: id,
 							cards: [
@@ -324,7 +264,7 @@ window.addEventListener("load", function() {
 										'<span>' + (pair.cards[0].text || "") + '</span>' +
 									'</div>' +
 									'<div visibility=true class="pair-card-edit">' +
-										'<label>text: <input class="pair-card-input-text" placeholder="text" value="' + (pair.cards[0].text || "") + '"/></label>' +
+										'<label>text: <input class="pair-card-input-text" type="text" placeholder="text" value="' + (pair.cards[0].text || "") + '"/></label>' +
 										'<label>background: <input class="pair-card-input-background" placeholder="background" type="color" value="' + pair.cards[0].background + '"/></label>' +
 										'<label>text color: <input class="pair-card-input-color" placeholder="color" type="color" value="' + pair.cards[0].color + '"/></label>' +
 									'</div>' +
@@ -334,13 +274,13 @@ window.addEventListener("load", function() {
 										'<span>' + (pair.cards[1].text || "") + '</span>' +
 									'</div>' +
 									'<div visibility=true class="pair-card-edit">' +
-										'<label>text: <input class="pair-card-input-text" placeholder="text" value="' + (pair.cards[1].text || "") + '"/></label>' +
+										'<label>text: <input class="pair-card-input-text" type="text" placeholder="text" value="' + (pair.cards[1].text || "") + '"/></label>' +
 										'<label>background: <input class="pair-card-input-background" placeholder="background" type="color" value="' + pair.cards[1].background + '"/></label>' +
 										'<label>text color: <input class="pair-card-input-color" placeholder="color" type="color" value="' + pair.cards[1].color + '"/></label>' +
 									'</div>' +
 								'</div>' +
 								'<form method="post" action="javascript:;" visibility=true class="pair-delete-form" onsubmit="window.submitDeletePair(\'' + pair.id + '\')">' +
-									'<button class="pair-delete-button">x</button>' +
+									'<button class="pair-delete-button">delete pair</button>' +
 								'</form>'
 						PAIRS.appendChild(pairElement)
 				}
@@ -363,180 +303,194 @@ window.addEventListener("load", function() {
 
 	/*** game ***/
 		/* startGame */
-			GAME_CREATE_FORM.addEventListener("submit", startGame)
-			function startGame() {
-				// validate
-					if (!window.DECK || !window.DECK.pairs || !window.DECK.pairs.length) {
-						GAME_CREATE_ERROR.innerText = "no cards found"
-						return
-					}
-
-				// clear table
-					GAME_TABLE.innerHTML = ""
-
-				// game
-					window.GAME = {
-						interactive: false,
-						deck: duplicateObject(window.DECK),
-						cards: [],
-						revealed: {
-							pair: null,
-							which: null
+			if (GAME_CREATE_FORM) {
+				GAME_CREATE_FORM.addEventListener("submit", startGame)
+				function startGame() {
+					// validate
+						if (!window.DECK || !window.DECK.pairs || !window.DECK.pairs.length) {
+							GAME_CREATE_ERROR.innerText = "no cards found"
+							return
 						}
-					}
 
-				// get cards
-					for (var i in window.GAME.deck.pairs) {
-						window.GAME.cards.push(window.GAME.deck.pairs[i].cards[0])
-						window.GAME.cards.push(window.GAME.deck.pairs[i].cards[1])
-					}
-					window.GAME.cards = sortRandom(window.GAME.cards)
+					// clear table
+						GAME_CREATE_ERROR.innerText = ""
+						GAME_TABLE.innerHTML = ""
 
-				// lay out cards
-					for (var i in window.GAME.cards) {
-						createGameCard(window.GAME.cards[i])
-					}
+					// game
+						window.GAME = {
+							interactive: false,
+							deck: window.FUNCTION_LIBRARY.duplicateObject(window.DECK),
+							cards: [],
+							revealed: {
+								pair: null,
+								which: null
+							}
+						}
 
-				// swap containers
-					CONTAINER.setAttribute("visibility", false)
-					GAME_CONTAINER.setAttribute("visibility", true)
+					// get cards
+						for (var i in window.GAME.deck.pairs) {
+							window.GAME.cards.push(window.GAME.deck.pairs[i].cards[0])
+							window.GAME.cards.push(window.GAME.deck.pairs[i].cards[1])
+						}
+						window.GAME.cards = window.FUNCTION_LIBRARY.sortRandom(window.GAME.cards)
 
-				// start
-					window.GAME.interactive = true
+					// lay out cards
+						for (var i in window.GAME.cards) {
+							createGameCard(window.GAME.cards[i])
+						}
+
+					// swap containers
+						CONTAINER.setAttribute("visibility", false)
+						GAME_CONTAINER.setAttribute("visibility", true)
+
+					// start
+						window.GAME.interactive = true
+				}
 			}
 
 		/* createGameCard */
-			function createGameCard(card) {
-				// element
-					var cardElement = document.createElement("button")
-						cardElement.className = "game-card"
-						cardElement.setAttribute("pair", card.pair)
-						cardElement.setAttribute("which", card.which)
-						cardElement.setAttribute("visibility", true)
-						cardElement.addEventListener(ON.click, flipCard)
-					GAME_TABLE.appendChild(cardElement)
+			if (GAME_CREATE_FORM) {
+				function createGameCard(card) {
+					// element
+						var cardElement = document.createElement("button")
+							cardElement.className = "game-card"
+							cardElement.setAttribute("pair", card.pair)
+							cardElement.setAttribute("which", card.which)
+							cardElement.setAttribute("visibility", true)
+							cardElement.setAttribute("hold-place", true)
+							cardElement.addEventListener("click", flipCard)
+						GAME_TABLE.appendChild(cardElement)
 
-				// faces
-					var cardFrontElement = document.createElement("div")
-						cardFrontElement.className = "game-card-front"
-						cardFrontElement.setAttribute("visibility", false)
-						cardFrontElement.innerHTML = "<span>" + card.text + "</span>"
-						cardFrontElement.style.background = card.background
-						cardFrontElement.style.color = card.color
-					cardElement.appendChild(cardFrontElement)
+					// faces
+						var cardFrontElement = document.createElement("div")
+							cardFrontElement.className = "game-card-front"
+							cardFrontElement.setAttribute("visibility", false)
+							cardFrontElement.innerHTML = "<span>" + card.text + "</span>"
+							cardFrontElement.style.background = card.background
+							cardFrontElement.style.color = card.color
+						cardElement.appendChild(cardFrontElement)
 
-					var cardBackElement = document.createElement("div")
-						cardBackElement.className = "game-card-back"
-						cardBackElement.setAttribute("visibility", true)
-					cardElement.appendChild(cardBackElement)
+						var cardBackElement = document.createElement("div")
+							cardBackElement.className = "game-card-back"
+							cardBackElement.setAttribute("visibility", true)
+						cardElement.appendChild(cardBackElement)
+				}
 			}
 
 		/* flipCard */
-			function flipCard(event) {
-				// interactive
-					if (!window.GAME.interactive) {
-						return
-					}
-
-				// cardElement
-					var cardElement = event.target.closest(".game-card")
-
-				// card
-					var pair = cardElement.getAttribute("pair")
-					var which = Number(cardElement.getAttribute("which"))
-					var card = window.GAME.cards.find(function(c) {
-						return c.pair == pair && c.which == which
-					})
-
-				// hiding?
-					if (cardElement.querySelector(".game-card-front").getAttribute("visibility") == "true") {
-						cardElement.querySelector(".game-card-front").setAttribute("visibility", false)
-						cardElement.querySelector(".game-card-back" ).setAttribute("visibility", true)
-
-						if (window.GAME.revealed.pair == card.pair && window.GAME.revealed.which == card.which) {
-							window.GAME.revealed.pair = window.GAME.revealed.which = null
+			if (GAME_CREATE_FORM) {
+				function flipCard(event) {
+					// interactive
+						if (!window.GAME.interactive) {
+							return
 						}
 
-						return
-					}
+					// cardElement
+						var cardElement = event.target.closest(".game-card")
 
-				// revealing
-					if (cardElement.querySelector(".game-card-back").getAttribute("visibility") == "true") {
-						cardElement.querySelector(".game-card-back" ).setAttribute("visibility", false)
-						cardElement.querySelector(".game-card-front").setAttribute("visibility", true)
+					// card
+						var pair = cardElement.getAttribute("pair")
+						var which = Number(cardElement.getAttribute("which"))
+						var card = window.GAME.cards.find(function(c) {
+							return c.pair == pair && c.which == which
+						})
 
-						// first card
-							if (!window.GAME.revealed.pair) {
-								window.GAME.revealed.pair = card.pair
-								window.GAME.revealed.which = card.which
-								return
+					// hiding?
+						if (cardElement.querySelector(".game-card-front").getAttribute("visibility") == "true") {
+							cardElement.querySelector(".game-card-front").setAttribute("visibility", false)
+							cardElement.querySelector(".game-card-back" ).setAttribute("visibility", true)
+
+							if (window.GAME.revealed.pair == card.pair && window.GAME.revealed.which == card.which) {
+								window.GAME.revealed.pair = window.GAME.revealed.which = null
 							}
 
-						// second card
-							testMatch(card, cardElement)
-					}
+							return
+						}
+
+					// revealing
+						if (cardElement.querySelector(".game-card-back").getAttribute("visibility") == "true") {
+							cardElement.querySelector(".game-card-back" ).setAttribute("visibility", false)
+							cardElement.querySelector(".game-card-front").setAttribute("visibility", true)
+
+							// first card
+								if (!window.GAME.revealed.pair) {
+									window.GAME.revealed.pair = card.pair
+									window.GAME.revealed.which = card.which
+									return
+								}
+
+							// second card
+								testMatch(card, cardElement)
+						}
+				}
 			}
 
 		/* testMatch */
-			function testMatch(card, cardElement) {
-				// uninteractive
-					window.GAME.interactive = false
+			if (GAME_CREATE_FORM) {
+				function testMatch(card, cardElement) {
+					// uninteractive
+						window.GAME.interactive = false
 
-				// pause for imapct
-					setTimeout(function() {
-						// not a match --> flip back
-							if (window.GAME.revealed.pair !== card.pair) {
-								cardElement.querySelector(".game-card-front").setAttribute("visibility", false)
-								cardElement.querySelector(".game-card-back" ).setAttribute("visibility", true)
+					// pause for imapct
+						setTimeout(function() {
+							// not a match --> flip back
+								if (window.GAME.revealed.pair !== card.pair) {
+									cardElement.querySelector(".game-card-front").setAttribute("visibility", false)
+									cardElement.querySelector(".game-card-back" ).setAttribute("visibility", true)
 
-								var unmatchElement = document.querySelector(".game-card[pair='" + window.GAME.revealed.pair + "'][which='" + window.GAME.revealed.which + "']")
-									unmatchElement.querySelector(".game-card-front").setAttribute("visibility", false)
-									unmatchElement.querySelector(".game-card-back" ).setAttribute("visibility", true)
+									var unmatchElement = document.querySelector(".game-card[pair='" + window.GAME.revealed.pair + "'][which='" + window.GAME.revealed.which + "']")
+										unmatchElement.querySelector(".game-card-front").setAttribute("visibility", false)
+										unmatchElement.querySelector(".game-card-back" ).setAttribute("visibility", true)
+
+									window.GAME.revealed.pair = window.GAME.revealed.which = null
+									window.GAME.interactive = true
+									return
+								}
+
+							// match --> remove
+								cardElement.setAttribute("visibility", false)
+
+								var matchElement = document.querySelector(".game-card[pair='" + window.GAME.revealed.pair + "'][which='" + window.GAME.revealed.which + "']")
+									matchElement.setAttribute("visibility", false)
 
 								window.GAME.revealed.pair = window.GAME.revealed.which = null
-								window.GAME.interactive = true
-								return
-							}
 
-						// match --> remove
-							cardElement.setAttribute("visibility", false)
-
-							var matchElement = document.querySelector(".game-card[pair='" + window.GAME.revealed.pair + "'][which='" + window.GAME.revealed.which + "']")
-								matchElement.setAttribute("visibility", false)
-
-							window.GAME.revealed.pair = window.GAME.revealed.which = null
-
-						// game over?
-							testVictory()
-					}, 2000)
+							// game over?
+								testVictory()
+						}, 2000)
+				}
 			}
 
-		/* testVictory  */
-			function testVictory() {
-				// remaining cards
-					var visibleCards = Array.from(document.querySelectorAll(".game-card[visibility=true]"))
-					if (visibleCards.length) {
-						window.GAME.interactive = true
-						return
-					}
+		/* testVictory */
+			if (GAME_CREATE_FORM) {
+				function testVictory() {
+					// remaining cards
+						var visibleCards = Array.from(document.querySelectorAll(".game-card[visibility=true]"))
+						if (visibleCards.length) {
+							window.GAME.interactive = true
+							return
+						}
 
-				// interactive
-					endGame()
+					// interactive
+						endGame()
+				}
 			}
 
 		/* endGame */
-			GAME_END_FORM.addEventListener("submit", endGame)
-			function endGame() {
-				// uninteractive
-					if (window.GAME) {
-						window.GAME.interactive = false
-					}
+			if (GAME_END_FORM) {
+				GAME_END_FORM.addEventListener("submit", endGame)
+				function endGame() {
+					// uninteractive
+						if (window.GAME) {
+							window.GAME.interactive = false
+						}
 
-				// empty table
-					GAME_TABLE.innerHTML = ""
+					// empty table
+						GAME_TABLE.innerHTML = ""
 
-				// swap containers
-					CONTAINER.setAttribute("visibility", true)
-					GAME_CONTAINER.setAttribute("visibility", false)
+					// swap containers
+						CONTAINER.setAttribute("visibility", true)
+						GAME_CONTAINER.setAttribute("visibility", false)
+				}
 			}
 })

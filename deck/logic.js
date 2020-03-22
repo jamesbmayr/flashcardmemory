@@ -274,7 +274,7 @@
 				// query
 					var query = {
 						collection: "decks",
-						command: "destroy",
+						command: "remove",
 						filters: {creator: REQUEST.session.user.id, id: REQUEST.post.deck.id},
 						document: null,
 						options: {}

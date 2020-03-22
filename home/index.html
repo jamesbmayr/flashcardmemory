@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>home</title>
+		<title>flash cards: home</title>
+		<link rel="stylesheet" href="../../../../main/stylesheet.css"/>
 		<link rel="stylesheet" href="../../../../home/stylesheet.css"/>
+		<script src="../../../../main/script.js"></script>
 		<script src="../../../../home/script.js"></script>
 	</head>
 	<body>
@@ -10,23 +12,26 @@
 			<form id="search-form" method="post" action="javascript:;">
 				<input  id="search-text" type="text" placeholder="deck name"/>
 				<button id="search-button">search</button>
-				<div    id="search-error"></div>
+				<div    id="search-error" class="error"></div>
 			</form>
 		</div>
 		<div id="container">
-			<h1 id="header">welcome</h1>
+			<h1 id="header">flash cards</h1>
+			<hr>
 			<form id="signup-form" method="post" action="javascript:;" visibility=false>
-				<input  id="signup-username" type="text" placeholder="username" autocomplete="off"/>
-				<input  id="signup-password" type="password" placeholder="password" autocomplete="off"/>
+				<h2>sign up</h2>
+				<label>username: <input  id="signup-username" type="text" placeholder="username" autocomplete="off"/></label>
+				<label>password: <input  id="signup-password" type="password" placeholder="password" autocomplete="off"/></label>
 				<button id="signup-button">sign up</button>
-				<div    id="signup-error"></div>
+				<div    id="signup-error" class="error"></div>
 				<div    id="signup-switch">have an account? sign in</div>
 			</form>
 			<form id="signin-form" method="post" action="javascript:;" visibility=true>
-				<input  id="signin-username" type="text" placeholder="username" autocomplete="on"/>
-				<input  id="signin-password" type="password" placeholder="password" autocomplete="on"/>
+				<h2>sign in</h2>
+				<label>username: <input  id="signin-username" type="text" placeholder="username" autocomplete="on"/></label>
+				<label>password: <input  id="signin-password" type="password" placeholder="password" autocomplete="on"/></label>
 				<button id="signin-button">sign in</button>
-				<div    id="signin-error"></div>
+				<div    id="signin-error" class="error"></div>
 				<div    id="signin-switch">new here? sign up</div>
 			</form>
 		</div>

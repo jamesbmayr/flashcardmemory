@@ -1,12 +1,7 @@
 window.addEventListener("load", function() {
 	/*** globals ***/
-		/* triggers */
-			if ((/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i).test(navigator.userAgent)) {
-				var ON = { click: "touchstart", mousedown: "touchstart", mousemove: "touchmove", mouseup: "touchend" }
-			}
-			else {
-				var ON = { click:      "click", mousedown:  "mousedown", mousemove: "mousemove", mouseup:  "mouseup" }
-			}
+		/* function library */
+			window.FUNCTION_LIBRARY = window.FUNCTION_LIBRARY || {}
 
 		/* elements */
 			var NAVIGATION              = document.getElementById("navigation")
@@ -37,40 +32,20 @@ window.addEventListener("load", function() {
 					var CREATE_DECK_BUTTON       = document.getElementById("create-deck-button")
 					var CREATE_DECK_ERROR        = document.getElementById("create-deck-error")
 
-	/*** helpers ***/
-		/* sendPost */
-			function sendPost(options, callback) {
-				// create request object and send to server
-					var request = new XMLHttpRequest()
-						request.open("POST", location.pathname, true)
-						request.onload = function() {
-							if (request.readyState !== XMLHttpRequest.DONE || request.status !== 200) {
-								callback({success: false, readyState: request.readyState, message: request.status})
-								return
-							}
-							
-							callback(JSON.parse(request.responseText) || {success: false, message: "unknown error"})
-						}
-						request.send(JSON.stringify(options))
-			}
-			
-		/* isNumLet */
-			function isNumLet(string) {
-				return (/^[a-zA-Z0-9]+$/).test(string)
-			}
-
 	/*** navigation ***/
 		/* submitSearch */
-			SEARCH_FORM.addEventListener("submit", submitSearch)
-			function submitSearch(event) {
-				// validate
-					if (!SEARCH_TEXT.value || !isNumLet(SEARCH_TEXT.value) || SEARCH_TEXT.value.length < 8) {
-						SEARCH_ERROR.innerText = "deck names must be 8+ numbers and letters"
-						return
-					}
+			if (SEARCH_FORM) {
+				SEARCH_FORM.addEventListener("submit", submitSearch)
+				function submitSearch(event) {
+					// validate
+						if (!SEARCH_TEXT.value || !window.FUNCTION_LIBRARY.isNumLet(SEARCH_TEXT.value) || SEARCH_TEXT.value.length < 8) {
+							SEARCH_ERROR.innerText = "deck names must be 8+ numbers and letters"
+							return
+						}
 
-				// redirect
-					window.location = "/deck/" + SEARCH_TEXT.value
+					// redirect
+						window.location = "/deck/" + SEARCH_TEXT.value
+				}
 			}
 
 	/*** authentication ***/
@@ -84,7 +59,7 @@ window.addEventListener("load", function() {
 						}
 
 					// un-authenticate
-						sendPost(data, function(response) {
+						window.FUNCTION_LIBRARY.sendPost(data, function(response) {
 							if (!response.success) {
 								return
 							}
@@ -100,7 +75,7 @@ window.addEventListener("load", function() {
 				UPDATE_USERNAME_FORM.addEventListener("submit", submitUpdateUsername)
 				function submitUpdateUsername(event) {
 					// validate
-						if (!UPDATE_USERNAME_USERNAME.value || !isNumLet(UPDATE_USERNAME_USERNAME.value) || UPDATE_USERNAME_USERNAME.value.length < 8) {
+						if (!UPDATE_USERNAME_USERNAME.value || !window.FUNCTION_LIBRARY.isNumLet(UPDATE_USERNAME_USERNAME.value) || UPDATE_USERNAME_USERNAME.value.length < 8) {
 							UPDATE_USERNAME_ERROR.innerText = "username must be 8+ numbers and letters"
 							return
 						}
@@ -112,7 +87,7 @@ window.addEventListener("load", function() {
 						}
 
 					// updates
-						sendPost(data, function(response) {
+						window.FUNCTION_LIBRARY.sendPost(data, function(response) {
 							if (!response.success) {
 								UPDATE_USERNAME_ERROR.innerText = response.message
 								return
@@ -145,7 +120,7 @@ window.addEventListener("load", function() {
 						}
 
 					// updates
-						sendPost(data, function(response) {
+						window.FUNCTION_LIBRARY.sendPost(data, function(response) {
 							if (!response.success) {
 								UPDATE_PASSWORD_ERROR.innerText = response.message
 								return
@@ -175,7 +150,7 @@ window.addEventListener("load", function() {
 						}
 
 					// updates
-						sendPost(data, function(response) {
+						window.FUNCTION_LIBRARY.sendPost(data, function(response) {
 							if (!response.success) {
 								DELETE_USER_ERROR.innerText = response.message
 								return
@@ -192,7 +167,7 @@ window.addEventListener("load", function() {
 				CREATE_DECK_FORM.addEventListener("submit", submitCreateDeck)
 				function submitCreateDeck(event) {
 					// validate
-						if (!CREATE_DECK_NAME.value || !isNumLet(CREATE_DECK_NAME.value) || CREATE_DECK_NAME.value.length < 8) {
+						if (!CREATE_DECK_NAME.value || !window.FUNCTION_LIBRARY.isNumLet(CREATE_DECK_NAME.value) || CREATE_DECK_NAME.value.length < 8) {
 							CREATE_DECK_ERROR.innerText = "deck name must be 8+ numbers and letters"
 							return
 						}
@@ -204,7 +179,7 @@ window.addEventListener("load", function() {
 						}
 
 					// updates
-						sendPost(data, function(response) {
+						window.FUNCTION_LIBRARY.sendPost(data, function(response) {
 							if (!response.success) {
 								CREATE_DECK_ERROR.innerText = response.message
 								return

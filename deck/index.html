@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>deck</title>
+		<title>flash cards: <script node>REQUEST.post.deck.name</script>node></title>
+		<link rel="stylesheet" href="../../../../main/stylesheet.css"/>
 		<link rel="stylesheet" href="../../../../deck/stylesheet.css"/>
+		<script src="../../../../main/script.js"></script>
 		<script src="../../../../deck/script.js"></script>
 		<script>
 			window.DECK = (<script node>JSON.stringify(REQUEST.post.deck) || "{}"</script>node>)
@@ -14,7 +16,7 @@
 			<form id="search-form" method="post" action="javascript:;">
 				<input  id="search-text" type="text" placeholder="deck name"/>
 				<button id="search-button">search</button>
-				<div    id="search-error"></div>
+				<div    id="search-error" class="error"></div>
 			</form>
 			<script node>
 				if (REQUEST.session.user) {
@@ -34,13 +36,13 @@
 				if (REQUEST.session.user && REQUEST.session.user.id == REQUEST.post.deck.creator) {
 					'<form id="game-create-form" method="post" action="javascript:;">' +
 						'<button id="game-create-button">play</button>' +
-						'<div id="game-create-error"></div>' +
+						'<div id="game-create-error" class="error"></div>' +
 					'</form>'
 				}
 				else {
 					'<form id="game-create-form" method="post" action="javascript:;" class="full-width">' +
 						'<button id="game-create-button">play</button>' +
-						'<div id="game-create-error"></div>' +
+						'<div id="game-create-error" class="error"></div>' +
 					'</form>'
 				}
 			</script>node>
@@ -54,14 +56,15 @@
 						'<button id="update-deck-button">save changes</button>' +
 						'<a id="update-deck-cancel" href="../../../../deck/' + REQUEST.post.deck.name + '">cancel</a>' +
 						'<div id="update-deck-delete">delete deck</div>' +
-						'<div id="update-deck-error"></div>' +
+						'<div id="update-deck-error" class="error"></div>' +
 					'</form>' +
 					'<form id="delete-deck-form" method="post" action="javascript:;" visibility=false>' +
 						'<button id="delete-deck-button">confirm delete deck</button>' +
-						'<div id="delete-deck-error"></div>' +
+						'<div id="delete-deck-error" class="error"></div>' +
 					'</form>'
 				}
 			</script>node>
+			<hr>
 			<div id="pairs">
 				<script node>
 					if (REQUEST.session.user && REQUEST.session.user.id == REQUEST.post.deck.creator) {
@@ -73,7 +76,7 @@
 										'<span>' + (REQUEST.post.deck.pairs[i].cards[0].text || "") + '</span>' +
 									'</div>' +
 									'<div visibility=false class="pair-card-edit">' +
-										'<label>text: <input class="pair-card-input-text" placeholder="text" value="' + (REQUEST.post.deck.pairs[i].cards[0].text || "") + '"/></label>' +
+										'<label>text: <input class="pair-card-input-text" type="text" placeholder="text" value="' + (REQUEST.post.deck.pairs[i].cards[0].text || "") + '"/></label>' +
 										'<label>background: <input class="pair-card-input-background" placeholder="background" type="color" value="' + (REQUEST.post.deck.pairs[i].cards[0].background || "") + '"/></label>' +
 										'<label>text color: <input class="pair-card-input-color" placeholder="color" type="color" value="' + (REQUEST.post.deck.pairs[i].cards[0].color || "") + '"/></label>' +
 									'</div>' +
@@ -83,13 +86,13 @@
 										'<span>' + (REQUEST.post.deck.pairs[i].cards[1].text || "") + '</span>' +
 									'</div>' +
 									'<div visibility=false class="pair-card-edit">' +
-										'<label>text: <input class="pair-card-input-text" placeholder="text" value="' + (REQUEST.post.deck.pairs[i].cards[1].text || "") + '"/></label>' +
+										'<label>text: <input class="pair-card-input-text" type="text" placeholder="text" value="' + (REQUEST.post.deck.pairs[i].cards[1].text || "") + '"/></label>' +
 										'<label>background: <input class="pair-card-input-background" placeholder="background" type="color" value="' + (REQUEST.post.deck.pairs[i].cards[1].background || "") + '"/></label>' +
 										'<label>text color: <input class="pair-card-input-color" placeholder="color" type="color" value="' + (REQUEST.post.deck.pairs[i].cards[1].color || "") + '"/></label>' +
 									'</div>' +
 								'</div>' +
 								'<form method="post" action="javascript:;" visibility=false class="pair-delete-form" onsubmit="window.submitDeletePair(\'' + REQUEST.post.deck.pairs[i].id + '\')">' +
-									'<button class="pair-delete-button">x</button>' +
+									'<button class="pair-delete-button">delete pair</button>' +
 								'</form>' +
 							'</div>'
 							pairs.push(pair)

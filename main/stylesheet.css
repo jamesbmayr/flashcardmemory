@@ -1,0 +1,269 @@
+/*** page ***/
+	html, body {
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		min-width: 100%;
+		border: 0px;
+		padding: 0px;
+		margin: 0px;
+		background-color: #dddddd;
+		font-family: monospace;
+		color: #222222;
+	}
+
+	/* headings */
+		h1 {
+			float: left;
+			width: 100%;
+			font-size: 100px;
+			font-weight: bold;
+			line-height: 1;
+			margin: 20px 0px 10px 0px;
+			text-align: center;
+		}
+
+		h2 {
+			float: left;
+			width: 100%;
+			font-size: 50px;
+			text-align: center;
+			margin: 0px 0px 10px 0px;
+		}
+
+		hr {
+			float: left;
+			border-radius: 5px;
+			border: 2px solid #aaaaaa;
+			width: 100%;
+			margin: 50px 0px 50px 0px;
+		}
+
+	/* form elements */
+		form {
+			float: left;
+			width: 100%;
+			height: auto;
+			margin-bottom: 10px;
+			transition: 0.1s;
+		}
+
+		label {
+			float: left;
+			width: 100%;
+			height: 30px;
+			text-align: left;
+			color: #222222;
+			font-weight: bold;
+			font-family: monospace;
+			font-size: 15px;
+			line-height: 2;
+			margin-bottom: 10px;
+		}
+
+		button {
+			float: left;
+			width: 100%;
+			height: 30px;
+			border: 0px;
+			outline: none;
+			cursor: pointer;
+			border-radius: 10px;
+			font-family: monospace;
+			font-size: 15px;
+			font-weight: bold;
+			background-color: #555555;
+			color: #dddddd;
+			box-shadow: 0px 0px 5px #333333;
+			margin-bottom: 10px;
+		}
+
+		button:focus, button:hover {
+			background-color: #333333;
+			box-shadow: 0px 0px 10px #555555;
+		}
+
+		a {
+			font-weight: bold;
+			text-decoration: none;
+			outline: none;
+			color: #3377dd;
+			font-family: monospace;
+			cursor: pointer;
+			font-size: 15px;
+		}
+
+		a:focus, a:hover {
+			text-shadow: 0px 0px 5px #3377dd;
+		}
+
+		a:visited {
+			color: #3377dd;
+		}
+
+		input[type="text"], input[type="password"], input[type="color"] {
+			float: right;
+			width: 100%;
+			height: 20px;
+			padding: 5px;
+			outline: none;
+			border-radius: 10px;
+			border: 0px;
+			font-family: monospace;
+			font-size: 15px;
+			color: #222222;
+			background-color: #ffffff;
+		}
+
+		input[type="color"] {
+			cursor: pointer;
+		}
+
+		label input[type="text"], label input[type="password"], label input[type="color"] {
+			width: calc(100% - 150px);
+		}
+
+		input:focus {
+			box-shadow: 0px 0px 10px #555555;
+		}
+
+/*** navigation ***/
+	#navigation {
+		width: 100%;
+		height: 50px;
+		background-color: #222222;
+		font-family: monospace;
+		color: #dddddd;
+		position: fixed;
+		z-index: 1000;
+		box-shadow: 0px 0px 5px #333333;
+	}
+
+	/* home */
+		#navigation-home {
+			float: left;
+			width: 90px;
+			height: 20px;
+			margin: 10px;
+			padding: 5px;
+			font-size: 15px;
+			color: #dddddd;
+			font-weight: bold;
+			text-decoration: none;
+			cursor: pointer;
+			text-align: center;
+			outline: none;
+			background-color: #555555;
+			border-radius: 10px;
+			line-height: 1.5;
+			box-shadow: 0px 0px 5px #333333;
+			display: inline-block;
+			vertical-align: top;
+		}
+
+		#navigation-home:focus, #navigation-home:hover {
+			background-color: #333333;
+			box-shadow: 0px 0px 10px #555555;
+			text-shadow: none;
+		}
+
+		#navigation-home:visited {
+			color: #dddddd;
+		}
+
+	/* search */
+		#search-form {
+			width: calc(100% - 240px);
+			height: 30px;
+			padding: 10px 0px 10px 0px;
+		}
+
+		#search-text {
+			float: left;
+			width: calc(100% - 110px);
+			border-radius: 10px 0px 0px 10px;
+		}
+
+		#search-button {
+			width: 100px;
+			border-radius: 0px 10px 10px 0px;
+		}
+
+	/* signout */
+		#signout-form {
+			width: 50px;
+			height: 30px;
+			padding: 10px;
+		}
+
+		#signout-button {
+			width: 100px;
+		}
+
+	/* signin */
+		#navigation-signin {
+			float: left;
+			width: 90px;
+			height: 20px;
+			margin: 10px;
+			padding: 5px;
+			color: #dddddd;
+			text-align: center;
+			background-color: #555555;
+			border-radius: 10px;
+			line-height: 1.5;
+			box-shadow: 0px 0px 5px #333333;
+			display: inline-block;
+			vertical-align: top;
+		}
+
+		#navigation-signin:hover, #navigation-signin:focus {
+			background-color: #333333;
+			box-shadow: 0px 0px 10px #555555;
+			text-shadow: none;
+		}
+
+		#navigation-signin:visited {
+			color: #dddddd;
+		}
+
+/*** container ***/
+	#container {
+		width: calc(100% - 100px);
+		max-width: 800px;
+		height: auto;
+		min-height: calc(100% - 50px);
+		margin: auto auto;
+		margin-top: 50px;
+		transition: 0.1s;
+	}
+
+/*** status ***/
+	/* visibility */
+		*[visibility=false] {
+			pointer-events: none;
+			opacity: 0;
+		}
+
+		*[visibility=false]:not([hold-place=true]), *[visibility=false]:not([hold-place=true]) * {
+			height: 0px !important;
+			width: 0px !important;
+			margin: 0px !important;
+			padding: 0px !important;
+			min-height: 0px !important;
+			min-width: 0px !important;
+			font-size: 0px !important;
+		}
+
+/*** error ***/
+	.error {
+		width: auto;
+		height: auto;
+		text-align: center;
+		margin: auto auto;
+		font-family: monospace;
+		color: #c70f0f;
+		font-size: 15px;
+		font-weight: bold;
+		margin-bottom: 10px;
+	}
