@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>deck</title>
+		<link rel="stylesheet" href="../../../../deck/stylesheet.css"/>
+		<script src="../../../../deck/script.js"></script>
+		<script>
+			window.deck = (<script node>JSON.stringify(REQUEST.post.deck) || "{}"</script>node>)
+		</script>
+	</head>
+	<body>
+		<div id="navigation">
+			<form id="search-form" method="post" action="javascript:;">
+				<input  id="search-text" type="text" placeholder="deck name"/>
+				<button id="search-button">search</button>
+				<div    id="search-error"></div>
+			</form>
+			<script node>
+				if (REQUEST.session.user) {
+					'<form id="signout-form" method="post" action="javascript:;" visibility=true>' +
+						'<button id="signout-button">sign out</button>' +
+						'<div    id="signout-error"></div>' +
+					'</form>'
+				}
+			</script>node>
+		</div>
+		<div id="container">
+			<h1 id="header"><script node>REQUEST.post.deck.name</script>node></h1>
+			<h2 id="creator">created by <script node>'<a href="/user/' + REQUEST.post.deck.creatorName + '">' + REQUEST.post.deck.creatorName + '</a>'</script>node></h2>
+			<script node>
+				if (REQUEST.session.user && REQUEST.session.user.id == REQUEST.post.deck.creator) {
+					'<form id="activate-edit-form" method="post" action="javascript:;" visibility=true>' +
+						'<button id="activate-edit-button">edit</button>' +
+					'</form>' +
+					'<form id="update-deck-form" method="post" action="javascript:;" visibility=false>' +
+						'<input id="update-deck-name" type="text" placeholder="deck name" value="' + REQUEST.post.deck.name + '"/>' +
+						'<button id="update-deck-button">save changes</button>' +
+						'<a href="../../../../deck/' + REQUEST.post.deck.name + '">cancel</a>' +
+						'<div id="update-deck-error"></div>' +
+					'</form>' +
+					'<form id="delete-deck-form" method="post" action="javascript:;" visibility=false>' +
+						'<button id="delete-deck-button">delete deck</button>' +
+						'<div id="delete-deck-error"></div>' +
+					'</form>'
+				}
+			</script>node>
+			<div id="pairs">
+				<script node>
+					if (REQUEST.session.user && REQUEST.session.user.id == REQUEST.post.deck.creator) {
+						var pairs = []
+						for (var i in REQUEST.post.deck.pairs) {
+							var pair = '<div class="pair" id="' + REQUEST.post.deck.pairs[i].id + '">' +
+								'<div class="pair-card pair-card-0">' +
+									'<div visibility=true class="pair-card-display" style="background: ' + REQUEST.post.deck.pairs[i].cards[0].background + '; color: ' + REQUEST.post.deck.pairs[i].cards[0].color + '">' + (REQUEST.post.deck.pairs[i].cards[0].text || "") + '</div>' +
+									'<input visibility=false class="pair-card-input-text" placeholder="text" value="' + (REQUEST.post.deck.pairs[i].cards[0].text || "") + '"/>' +
+									'<input visibility=false class="pair-card-input-background" placeholder="background" value="' + (REQUEST.post.deck.pairs[i].cards[0].background || "") + '"/>' +
+									'<input visibility=false class="pair-card-input-color" placeholder="color" value="' + (REQUEST.post.deck.pairs[i].cards[0].color || "") + '"/>' +
+								'</div>' +
+								'<div class="pair-card pair-card-1">' +
+									'<div visibility=true class="pair-card-display" style="background: ' + REQUEST.post.deck.pairs[i].cards[1].background + '; color: ' + REQUEST.post.deck.pairs[i].cards[1].color + '">' + (REQUEST.post.deck.pairs[i].cards[1].text || "") + '</div>' +
+									'<input visibility=false class="pair-card-input-text" placeholder="text" value="' + (REQUEST.post.deck.pairs[i].cards[1].text || "") + '"/>' +
+									'<input visibility=false class="pair-card-input-background" placeholder="background" value="' + (REQUEST.post.deck.pairs[i].cards[1].background || "") + '"/>' +
+									'<input visibility=false class="pair-card-input-color" placeholder="color" value="' + (REQUEST.post.deck.pairs[i].cards[1].color || "") + '"/>' +
+								'</div>' +
+								'<form method="post" action="javascript:;" visibility=false class="pair-delete-form" onsubmit="window.submitDeletePair(\'' + REQUEST.post.deck.pairs[i].id + '\')">' +
+									'<button class="pair-delete-button">x</button>' +
+								'</form>' +
+							'</div>'
+							pairs.push(pair)
+						}
+						
+						pairs.join("")
+					}
+					else {
+						var pairs = []
+						for (var i in REQUEST.post.deck.pairs) {
+							var pair = '<div class="pair" id="' + REQUEST.post.deck.pairs[i].id + '">' +
+								'<div class="pair-card pair-card-0">' +
+									'<div class="pair-card-display" style="background: ' + REQUEST.post.deck.pairs[i].cards[0].background + '; color: ' + REQUEST.post.deck.pairs[i].cards[0].color + '">' + (REQUEST.post.deck.pairs[i].cards[0].text || "") + '</div>' +
+								'</div>' +
+								'<div class="pair-card pair-card-1">' +
+									'<div class="pair-card-display" style="background: ' + REQUEST.post.deck.pairs[i].cards[1].background + '; color: ' + REQUEST.post.deck.pairs[i].cards[1].color + '">' + (REQUEST.post.deck.pairs[i].cards[1].text || "") + '</div>' +
+								'</div>' +
+							'</div>'
+							pairs.push(pair)
+						}
+						
+						pairs.join("")
+					}
+				</script>node>
+			</div>
+			<script node>
+				if (REQUEST.session.user && REQUEST.session.user.id == REQUEST.post.deck.creator) {
+					'<form id="pair-create-form" method="post" action="javascript:;" visibility=false>' +
+						'<button id="pair-create-button">+</button>' +
+					'</form>'
+				}
+			</script>node>
+		</div>
+	</body>
+</html>

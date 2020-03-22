@@ -1,12 +1,11 @@
 /*** modules ***/
-	var HTTP       = require("http")
-	var FS         = require("fs")
-	var CRYPTO     = require("crypto")
+	if (!HTTP)   { var HTTP   = require("http") }
+	if (!FS)     { var FS     = require("fs") }
+	if (!CRYPTO) { var CRYPTO = require("crypto") }
 	module.exports = {}
 
 /*** constants ***/
 	var ENVIRONMENT = getEnvironment()
-	var CONSTANTS   = getAsset("constants")
 
 /*** logs ***/
 	/* logError */
@@ -58,6 +57,7 @@
 	/* getEnvironment */
 		module.exports.getEnvironment = getEnvironment
 		function getEnvironment() {
+			console.log(arguments.callee.name)
 			try {
 				if (process.env.DOMAIN !== undefined) {
 					return {
@@ -83,6 +83,7 @@
 	/* getAsset */
 		module.exports.getAsset = getAsset
 		function getAsset(index) {
+			console.log(arguments.callee.name)
 			try {
 				switch (index) {
 					case "logo":
@@ -116,6 +117,7 @@
 	/* getContentType */
 		module.exports.getContentType = getContentType
 		function getContentType(string) {
+			console.log(arguments.callee.name)
 			try {
 				var array = string.split(".")
 				var extension = array[array.length - 1].toLowerCase()
@@ -211,6 +213,7 @@
 	/* isNumLet */
 		module.exports.isNumLet = isNumLet
 		function isNumLet(string) {
+			console.log(arguments.callee.name)
 			try {
 				return (/^[a-zA-Z0-9]+$/).test(string)
 			}
@@ -224,6 +227,7 @@
 	/* renderHTML */
 		module.exports.renderHTML = renderHTML
 		function renderHTML(REQUEST, path, callback) {
+			console.log(arguments.callee.name)
 			try {
 				var html = {}
 				FS.readFile(path, "utf8", function (error, file) {
@@ -259,6 +263,7 @@
 	/* duplicateObject */
 		module.exports.duplicateObject = duplicateObject
 		function duplicateObject(object) {
+			console.log(arguments.callee.name)
 			try {
 				return JSON.parse(JSON.stringify(object))
 			}
@@ -272,6 +277,7 @@
 	/* hashRandom */
 		module.exports.hashRandom = hashRandom
 		function hashRandom(string, salt) {
+			console.log(arguments.callee.name)
 			try {
 				return CRYPTO.createHmac("sha512", salt).update(string).digest("hex")
 			}
@@ -284,8 +290,9 @@
 	/* generateRandom */
 		module.exports.generateRandom = generateRandom
 		function generateRandom(set, length) {
+			console.log(arguments.callee.name)
 			try {
-				set = set || "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+				set = set || "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 				length = length || 32
 				
 				var output = ""
@@ -304,6 +311,7 @@
 	/* chooseRandom */
 		module.exports.chooseRandom = chooseRandom
 		function chooseRandom(options) {
+			console.log(arguments.callee.name)
 			try {
 				if (!Array.isArray(options)) {
 					return false
@@ -318,47 +326,60 @@
 			}
 		}
 
-/*** database ***/
-	/* determineSession */
-		module.exports.determineSession = determineSession
-		function determineSession(REQUEST, RESPONSE, DB, callback) {
+/*** sessions ***/
+	/* createSession */
+		module.exports.createSession = createSession
+		function createSession(REQUEST, RESPONSE, DB, callback) {
+			console.log(arguments.callee.name)
+			try {
+				// session
+					var session = {
+						id: generateRandom(),
+						updated: new Date().getTime(),
+						userId: null,
+						info: {
+							"ip":         REQUEST.ip,
+				 			"user-agent": REQUEST.headers["user-agent"],
+				 			"language":   REQUEST.headers["accept-language"],
+						},
+					}
+
+				// query
+					var query = {
+						collection: "sessions",
+						command: "insert",
+						filters: null,
+						document: session,
+						options: {}
+					}
+
+				// insert
+					accessDatabase(DB, query, function(results) {
+						if (!results.success) {
+							logError(results.message)
+							return
+						}
+
+						REQUEST.session = session
+						REQUEST.cookie.session = session.id
+						callback(REQUEST, RESPONSE)
+						return
+					})
+			}
+			catch (error) {
+				logError(error)
+				callback({success: false, message: "unable to " + arguments.callee.name})
+			}
+		}
+
+	/* readSession */
+		module.exports.readSession = readSession
+		function readSession(REQUEST, RESPONSE, DB, callback) {
+			console.log(arguments.callee.name)
 			try {
 				// no cookie
 					if (!REQUEST.cookie.session || REQUEST.cookie.session == null || REQUEST.cookie.session == 0) {
-						// create session
-							var session = {
-								id: generateRandom(),
-								updated: new Date().getTime(),
-								userId: null,
-								info: {
-									"ip":         REQUEST.ip,
-						 			"user-agent": REQUEST.headers["user-agent"],
-						 			"language":   REQUEST.headers["accept-language"],
-								},
-							}
-
-						// query
-							var query = {
-								collection: "sessions",
-								command: "insert",
-								filters: null,
-								document: session,
-								options: {}
-							}
-
-						// insert
-							accessDatabase(DB, query, function(results) {
-								if (!results.success) {
-									logError(results.message)
-									return
-								}
-
-								REQUEST.session = session
-								REQUEST.cookie.session = session.id
-								callback(REQUEST, RESPONSE)
-								return
-							})
-
+						createSession(REQUEST, RESPONSE, DB, callback)
 						return
 					}
 
@@ -373,60 +394,15 @@
 
 				// find
 					accessDatabase(DB, query, function(results) {
-						if (!results.success || !results.documents) {
-							REQUEST.cookie.session = null
-							determineSession(REQUEST, RESPONSE, DB, callback)
+						if (!results.success) {
+							REQUEST.session = REQUEST.cookie.session = null
+							readSession(REQUEST, RESPONSE, DB, callback)
 							return
 						}
 
-						// query
-							var query = {
-								collection: "sessions",
-								command: "update",
-								filters: {id: REQUEST.cookie.session},
-								document: {updated: new Date().getTime()},
-								options: {}
-							}
-
 						// update
-							accessDatabase(DB, query, function(results) {
-								if (!results.success || !results.documents) {
-									REQUEST.cookie.session = null
-									determineSession(REQUEST, RESPONSE, DB, callback)
-									return
-								}
-
-								// results
-									REQUEST.session = results.documents[0]
-
-								// no user?
-									if (!REQUEST.session.userId) {
-										callback(REQUEST, RESPONSE)
-										return
-									}
-
-								// query
-									var query = {
-										collection: "users",
-										command: "find",
-										filters: {id: REQUEST.session.userId},
-										document: null,
-										option: {}
-									}
-
-								// user
-									accessDatabase(DB, query, function(results) {
-										if (!results.success || !results.documents) {
-											REQUEST.session.userId = null
-											callback(REQUEST, RESPONSE)
-											return
-										}
-
-										REQUEST.session.user = results.documents[0]
-										callback(REQUEST, RESPONSE)
-										return
-									})
-							})
+							updateSession(REQUEST, RESPONSE, DB, callback)
+							return
 					})
 			}
 			catch (error) {
@@ -435,9 +411,48 @@
 			}
 		}
 
+	/* updateSession */
+		module.exports.updateSession = updateSession
+		function updateSession(REQUEST, RESPONSE, DB, callback) {
+			console.log(arguments.callee.name)
+			try {
+				// query
+					var query = {
+						collection: "sessions",
+						command: "update",
+						filters: {id: REQUEST.cookie.session},
+						document: {updated: new Date().getTime()},
+						options: {}
+					}
+
+				// update
+					accessDatabase(DB, query, function(results) {
+						if (!results.success) {
+							REQUEST.session = REQUEST.cookie.session = null
+							readSession(REQUEST, RESPONSE, DB, callback)
+							return
+						}
+
+						// results
+							REQUEST.session = results.documents[0]
+							REQUEST.cookie.session = results.documents[0].id
+
+						// find user
+							USER.readThisUser(REQUEST, RESPONSE, DB, callback)
+							return
+					})
+			}
+			catch (error) {
+				logError(error)
+				callback({success: false, message: "unable to " + arguments.callee.name})
+			}
+		}
+	
+/*** database ***/
 	/* accessDatabase */
 		module.exports.accessDatabase = accessDatabase
 		function accessDatabase(DB, query, callback) {
+			console.log(arguments.callee.name)
 			try {
 				// connect
 					if (!DB) {
@@ -478,14 +493,20 @@
 								return
 							}
 
+						// yes documents
 							callback({success: true, count: documentKeys.length, documents: documents})
 							return
 					}
 
 				// insert
 					if (query.command == "insert") {
-						// prepare document
-							var id = generateRandom()
+						// unique id
+							do {
+								var id = generateRandom()
+							}
+							while (DB[query.collection][id])
+
+						// insert document
 							DB[query.collection][id] = duplicateObject(query.document)
 
 						// return document
@@ -518,11 +539,19 @@
 								}
 							}
 
-						// return documents
+						// update documents
 							var documents = []
 							for (var d in documentKeys) {
 								documents.push(duplicateObject(DB[query.collection][documentKeys[d]]))
 							}
+
+						// no documents
+							if (!documents.length) {
+								callback({success: false, count: 0, documents: []})
+								return
+							}
+
+						// yes documents
 							callback({success: true, count: documentKeys.length, documents: documents})
 							return
 					}
@@ -542,10 +571,15 @@
 
 						// delete
 							for (var d in documentKeys) {
-								delete DB[query.collection[documentKeys[d]]]
+								delete DB[query.collection][documentKeys[d]]
 							}
 
-						// return documents
+						// no documents
+							if (!documentKeys.length) {
+								callback({success: false, count: 0})
+							}
+
+						// yes documents
 							callback({success: true, count: documentKeys.length})
 							return
 					}
@@ -555,3 +589,8 @@
 				callback({success: false, message: "unable to " + arguments.callee.name})
 			}
 		}
+
+/*** other ***/
+	if (!HOME)   { var HOME   = require("../home/logic") }
+	if (!USER)   { var USER   = require("../user/logic") }
+	if (!DECK)   { var DECK   = require("../deck/logic") }

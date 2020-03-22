@@ -5,7 +5,8 @@
 
 	var MAIN = require("./main/logic")
 	var HOME = require("./home/logic")
-	var MAKE = require("./make/logic")
+	var DECK = require("./deck/logic")
+	var USER = require("./user/logic")
 
 /*** database ***/
 	var DB = {
@@ -32,6 +33,7 @@
 /*** request ***/
 	/* handleRequest */
 		function handleRequest(REQUEST, RESPONSE) {
+			console.log(arguments.callee.name)
 			// collect data
 				var data = ""
 				REQUEST.on("data", function (chunk) { data += chunk })
@@ -42,6 +44,7 @@
 
 	/* parseRequest */
 		function parseRequest(REQUEST, RESPONSE, data) {
+			console.log(arguments.callee.name)
 			try {
 				// get request info
 					REQUEST.get    = QS.parse(REQUEST.url.split("?")[1]) || {}
@@ -64,13 +67,14 @@
 						return
 					}
 
-					MAIN.determineSession(REQUEST, RESPONSE, DB, routeRequest)
+					MAIN.readSession(REQUEST, RESPONSE, DB, routeRequest)
 			}
 			catch (error) {_403(REQUEST, RESPONSE, "unable to parse request")}
 		}
 
 	/* routeRequest */
 		function routeRequest(REQUEST, RESPONSE) {
+			console.log(arguments.callee.name)
 			try {
 				// get
 					if (REQUEST.method == "GET") {
@@ -114,6 +118,11 @@
 							// home
 								case (/^\/?$/).test(REQUEST.url):
 									try {
+										if (REQUEST.session.user && REQUEST.session.user.username) {
+											_302(REQUEST, RESPONSE, "/user/" + REQUEST.session.user.username)
+											return
+										}
+
 										RESPONSE.writeHead(200, {
 											"Set-Cookie": String("session=" + REQUEST.session.id + "; expires=" + (new Date(new Date().getTime() + ENVIRONMENT.cookieLength).toUTCString()) + "; path=/; domain=" + ENVIRONMENT.domain),
 											"Content-Type": "text/html; charset=utf-8"
@@ -125,32 +134,54 @@
 									catch (error) {_404(REQUEST, RESPONSE, error)}
 								break
 
-							// make
-								case (/^\/make\/([a-zA-Z0-9])+$/).test(REQUEST.url):
+							// user
+								case (/^\/user\/([a-zA-Z0-9])+$/).test(REQUEST.url):
 									try {
-										RESPONSE.writeHead(200, {
-											"Set-Cookie": String("session=" + REQUEST.session.id + "; expires=" + (new Date(new Date().getTime() + ENVIRONMENT.cookieLength).toUTCString()) + "; path=/; domain=" + ENVIRONMENT.domain),
-											"Content-Type": "text/html; charset=utf-8"
-										})
-										MAIN.renderHTML(REQUEST, "./make/index.html", function (html) {
-											RESPONSE.end(html)
+										REQUEST.post = {username: REQUEST.path[REQUEST.path.length - 1]}
+										USER.readUser(REQUEST, RESPONSE, DB, function(results) {
+											if (!results.success) {
+												_403(REQUEST, RESPONSE, "unknown error reading user " + REQUEST.path[REQUEST.path.length - 1])
+												return
+											}
+
+											RESPONSE.writeHead(200, {
+												"Set-Cookie": String("session=" + REQUEST.session.id + "; expires=" + (new Date(new Date().getTime() + ENVIRONMENT.cookieLength).toUTCString()) + "; path=/; domain=" + ENVIRONMENT.domain),
+												"Content-Type": "text/html; charset=utf-8"
+											})
+											MAIN.renderHTML(REQUEST, "./user/index.html", function (html) {
+												RESPONSE.end(html)
+											})
 										})
 									}
 									catch (error) {_404(REQUEST, RESPONSE, error)}
 								break
+								case (/^\/user\/?$/).test(REQUEST.url):
+									_302(REQUEST, RESPONSE, "/")
+								break
 
-							// play
-								case (/^\/play\/([a-zA-Z0-9])+$/).test(REQUEST.url):
+							// deck
+								case (/^\/deck\/([a-zA-Z0-9])+$/).test(REQUEST.url):
 									try {
-										RESPONSE.writeHead(200, {
-											"Set-Cookie": String("session=" + REQUEST.session.id + "; expires=" + (new Date(new Date().getTime() + ENVIRONMENT.cookieLength).toUTCString()) + "; path=/; domain=" + ENVIRONMENT.domain),
-											"Content-Type": "text/html; charset=utf-8"
-										})
-										MAIN.renderHTML(REQUEST, "./play/index.html", function (html) {
-											RESPONSE.end(html)
+										REQUEST.post = {name: REQUEST.path[REQUEST.path.length - 1]}
+										DECK.readDeck(REQUEST, RESPONSE, DB, function(results) {
+											if (!results.success) {
+												_403(REQUEST, RESPONSE, "unknown error reading deck " + REQUEST.path[REQUEST.path.length - 1])
+												return
+											}
+
+											RESPONSE.writeHead(200, {
+												"Set-Cookie": String("session=" + REQUEST.session.id + "; expires=" + (new Date(new Date().getTime() + ENVIRONMENT.cookieLength).toUTCString()) + "; path=/; domain=" + ENVIRONMENT.domain),
+												"Content-Type": "text/html; charset=utf-8"
+											})
+											MAIN.renderHTML(REQUEST, "./deck/index.html", function (html) {
+												RESPONSE.end(html)
+											})
 										})
 									}
 									catch (error) {_404(REQUEST, RESPONSE, error)}
+								break
+								case (/^\/deck\/?$/).test(REQUEST.url):
+									_302(REQUEST, RESPONSE, "/")
 								break
 
 							// data
@@ -179,7 +210,7 @@
 									case "signUp":
 										try {
 											RESPONSE.writeHead(200, {"Content-Type": "text/json"})
-											HOME.signUp(REQUEST, DB, function (data) {
+											HOME.signUp(REQUEST, RESPONSE, DB, function (data) {
 												RESPONSE.end(JSON.stringify(data))
 											})
 										}
@@ -190,7 +221,7 @@
 									case "signIn":
 										try {
 											RESPONSE.writeHead(200, {"Content-Type": "text/json"})
-											HOME.signIn(REQUEST, DB, function (data) {
+											HOME.signIn(REQUEST, RESPONSE, DB, function (data) {
 												RESPONSE.end(JSON.stringify(data))
 											})
 										}
@@ -201,52 +232,64 @@
 									case "signOut":
 										try {
 											RESPONSE.writeHead(200, {"Content-Type": "text/json"})
-											HOME.signOut(REQUEST, DB, function (data) {
+											HOME.signOut(REQUEST, RESPONSE, DB, function (data) {
 												RESPONSE.end(JSON.stringify(data))
 											})
 										}
 										catch (error) {_403(REQUEST, RESPONSE, error)}
 									break
 
-								// changeUsername
-									case "changeUsername":
+							// user
+								// createUser
+									case "createUser":
 										try {
 											RESPONSE.writeHead(200, {"Content-Type": "text/json"})
-											HOME.changeUsername(REQUEST, DB, function (data) {
+											USER.createUser(REQUEST, RESPONSE, DB, function (data) {
 												RESPONSE.end(JSON.stringify(data))
 											})
 										}
 										catch (error) {_403(REQUEST, RESPONSE, error)}
 									break
 
-								// changePassword
-									case "changePassword":
+								// updateUsername
+									case "updateUsername":
 										try {
 											RESPONSE.writeHead(200, {"Content-Type": "text/json"})
-											HOME.changePassword(REQUEST, DB, function (data) {
+											USER.updateUsername(REQUEST, RESPONSE, DB, function (data) {
 												RESPONSE.end(JSON.stringify(data))
 											})
 										}
 										catch (error) {_403(REQUEST, RESPONSE, error)}
 									break
 
-							// make
+								// updatePassword
+									case "updatePassword":
+										try {
+											RESPONSE.writeHead(200, {"Content-Type": "text/json"})
+											USER.updatePassword(REQUEST, RESPONSE, DB, function (data) {
+												RESPONSE.end(JSON.stringify(data))
+											})
+										}
+										catch (error) {_403(REQUEST, RESPONSE, error)}
+									break
+
+								// deleteUser
+									case "deleteUser":
+										try {
+											RESPONSE.writeHead(200, {"Content-Type": "text/json"})
+											USER.deleteUser(REQUEST, RESPONSE, DB, function (data) {
+												RESPONSE.end(JSON.stringify(data))
+											})
+										}
+										catch (error) {_403(REQUEST, RESPONSE, error)}
+									break
+
+							// deck
 								// createDeck
 									case "createDeck":
 										try {
 											RESPONSE.writeHead(200, {"Content-Type": "text/json"})
-											MAKE.createDeck(REQUEST, DB, function (data) {
-												RESPONSE.end(JSON.stringify(data))
-											})
-										}
-										catch (error) {_403(REQUEST, RESPONSE, error)}
-									break
-
-								// readDeck
-									case "readDeck":
-										try {
-											RESPONSE.writeHead(200, {"Content-Type": "text/json"})
-											MAKE.readDeck(REQUEST, DB, function (data) {
+											DECK.createDeck(REQUEST, RESPONSE, DB, function (data) {
 												RESPONSE.end(JSON.stringify(data))
 											})
 										}
@@ -257,7 +300,7 @@
 									case "updateDeck":
 										try {
 											RESPONSE.writeHead(200, {"Content-Type": "text/json"})
-											MAKE.updateDeck(REQUEST, DB, function (data) {
+											DECK.updateDeck(REQUEST, RESPONSE, DB, function (data) {
 												RESPONSE.end(JSON.stringify(data))
 											})
 										}
@@ -268,7 +311,7 @@
 									case "deleteDeck":
 										try {
 											RESPONSE.writeHead(200, {"Content-Type": "text/json"})
-											HOME.deleteDeck(REQUEST, DB, function (data) {
+											DECK.deleteDeck(REQUEST, RESPONSE, DB, function (data) {
 												RESPONSE.end(JSON.stringify(data))
 											})
 										}
@@ -290,6 +333,7 @@
 
 	/* _302 */
 		function _302(REQUEST, RESPONSE, data) {
+			console.log(arguments.callee.name)
 			MAIN.logStatus("redirecting to " + (data || "/"))
 			RESPONSE.writeHead(302, { Location: data || "../../../../" })
 			RESPONSE.end()
@@ -297,6 +341,7 @@
 
 	/* _403 */
 		function _403(REQUEST, RESPONSE, data) {
+			console.log(arguments.callee.name)
 			MAIN.logError(data)
 			RESPONSE.writeHead(403, { "Content-Type": "text/json" })
 			RESPONSE.end( JSON.stringify({success: false, error: data}) )
@@ -304,6 +349,7 @@
 
 	/* _404 */
 		function _404(REQUEST, RESPONSE, data) {
+			console.log(arguments.callee.name)
 			MAIN.logError(data)
 			RESPONSE.writeHead(404, { "Content-Type": "text/html; charset=utf-8" })
 			MAIN.renderHTML(REQUEST, "./main/_404.html", function (html) {

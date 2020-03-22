@@ -2,44 +2,32 @@
 <html>
 	<head>
 		<title>home</title>
-		<link rel="stylesheet" href="./home/stylesheet.css"/>
-		<script src="./home/script.js"></script>
+		<link rel="stylesheet" href="../../../../home/stylesheet.css"/>
+		<script src="../../../../home/script.js"></script>
 	</head>
 	<body>
-		<div id="container">
-			<form id="signup-form" method="post" action="javascript:;" visible=false>
-				<input  id="signup-username" type="text" placeholder="username"/>
-				<input  id="signup-password" type="password" placeholder="password"/>
-				<button id="signup-button">sign up</button>
-				<div    id="signup-error"></div>
-				<div    id="signup-switch">have an account? sign in</div>
-			</form>
-			<form id="signin-form" method="post" action="javascript:;" visible=true>
-				<input  id="signin-username" type="text" placeholder="username"/>
-				<input  id="signin-password" type="password" placeholder="password"/>
-				<button id="signin-button">sign in</button>
-				<div    id="signin-error"></div>
-				<div    id="signin-switch">new here? sign up</div>
-			</form>
-			<form id="signout-form" method="post" action="javascript:;" visible=false>
-				<button id="signout-button">sign out</button>
-				<div    id="signout-error"></div>
-			</form>
+		<div id="navigation">
 			<form id="search-form" method="post" action="javascript:;">
 				<input  id="search-text" type="text" placeholder="deck name"/>
 				<button id="search-button">search</button>
 				<div    id="search-error"></div>
 			</form>
-			<form id="change-username-form" method="post" action="javascript:;" visible=false>
-				<input  id="change-username-username" type="text" placeholder="new username"/>
-				<button id="change-username-button">change username</button>
-				<div    id="change-username-error"></div>
+		</div>
+		<div id="container">
+			<h1 id="header">welcome</h1>
+			<form id="signup-form" method="post" action="javascript:;" visibility=false>
+				<input  id="signup-username" type="text" placeholder="username" autocomplete="off"/>
+				<input  id="signup-password" type="password" placeholder="password" autocomplete="off"/>
+				<button id="signup-button">sign up</button>
+				<div    id="signup-error"></div>
+				<div    id="signup-switch">have an account? sign in</div>
 			</form>
-			<form id="change-password-form" method="post" action="javascript:;" visible=false>
-				<input  id="change-password-old" type="password" placeholder="old password"/>
-				<input  id="change-password-new" type="password" placeholder="new password"/>
-				<button id="change-password-button">change password</button>
-				<div    id="change-password-error"></div>
+			<form id="signin-form" method="post" action="javascript:;" visibility=true>
+				<input  id="signin-username" type="text" placeholder="username" autocomplete="on"/>
+				<input  id="signin-password" type="password" placeholder="password" autocomplete="on"/>
+				<button id="signin-button">sign in</button>
+				<div    id="signin-error"></div>
+				<div    id="signin-switch">new here? sign up</div>
 			</form>
 		</div>
 	</body>

@@ -9,6 +9,11 @@ window.addEventListener("load", function() {
 			}
 
 		/* elements */
+			var SEARCH_FORM     = document.getElementById("search-form")
+			var SEARCH_TEXT     = document.getElementById("search-text")
+			var SEARCH_BUTTON   = document.getElementById("search-button")
+			var SEARCH_ERROR    = document.getElementById("search-error")
+
 			var SIGNUP_FORM     = document.getElementById("signup-form")
 			var SIGNUP_USERNAME = document.getElementById("signup-username")
 			var SIGNUP_PASSWORD = document.getElementById("signup-password")
@@ -23,25 +28,41 @@ window.addEventListener("load", function() {
 			var SIGNIN_ERROR    = document.getElementById("signin-error")
 			var SIGNIN_SWITCH   = document.getElementById("signin-switch")
 
-			var SIGNOUT_FORM    = document.getElementById("signout-form")
-			var SIGNOUT_BUTTON  = document.getElementById("signout-button")
-			var SIGNOUT_ERROR   = document.getElementById("signout-error")
+	/*** helpers ***/
+		/* sendPost */
+			function sendPost(options, callback) {
+				// create request object and send to server
+					var request = new XMLHttpRequest()
+						request.open("POST", location.pathname, true)
+						request.onload = function() {
+							if (request.readyState !== XMLHttpRequest.DONE || request.status !== 200) {
+								callback({success: false, readyState: request.readyState, message: request.status})
+								return
+							}
+							
+							callback(JSON.parse(request.responseText) || {success: false, message: "unknown error"})
+						}
+						request.send(JSON.stringify(options))
+			}
+			
+		/* isNumLet */
+			function isNumLet(string) {
+				return (/^[a-zA-Z0-9]+$/).test(string)
+			}
 
-			var SEARCH_FORM     = document.getElementById("search-form")
-			var SEARCH_TEXT     = document.getElementById("search-username")
-			var SEARCH_BUTTON   = document.getElementById("search-password")
-			var SEARCH_ERROR    = document.getElementById("search-error")
+	/*** navigation ***/
+		/* submitSearch */
+			SEARCH_FORM.addEventListener("submit", submitSearch)
+			function submitSearch(event) {
+				// validate
+					if (!SEARCH_TEXT.value || !isNumLet(SEARCH_TEXT.value) || SEARCH_TEXT.value.length < 8) {
+						SEARCH_ERROR.innerText = "deck names must be 8+ numbers and letters"
+						return
+					}
 
-			var CHANGE_USERNAME_FORM     = document.getElementById("change-username-form")
-			var CHANGE_USERNAME_USERNAME = document.getElementById("change-username-username")
-			var CHANGE_USERNAME_BUTTON   = document.getElementById("change-username-button")
-			var CHANGE_USERNAME_ERROR    = document.getElementById("change-username-error")
-
-			var CHANGE_PASSWORD_FORM     = document.getElementById("change-password-form")
-			var CHANGE_PASSWORD_OLD      = document.getElementById("change-password-old")
-			var CHANGE_PASSWORD_NEW      = document.getElementById("change-password-new")
-			var CHANGE_PASSWORD_BUTTON   = document.getElementById("change-password-button")
-			var CHANGE_PASSWORD_ERROR    = document.getElementById("change-password-error")
+				// redirect
+					window.location = "/deck/" + SEARCH_TEXT.value
+			}
 
 	/*** authentication ***/
 		/* submitSignUp */
@@ -106,134 +127,17 @@ window.addEventListener("load", function() {
 					})
 			}
 
-		/* submitSignOut */
-			SIGNOUT_FORM.addEventListener("submit", submitSignOut)
-			function submitSignOut(event) {
-				// data
-					var data = {
-						action: "signOut"
-					}
-
-				// un-authenticate
-					sendPost(data, function(response) {
-						if (!response.success) {
-							SIGNOUT_ERROR.innerText = response.message
-							return
-						}
-
-						window.location = response.location
-					})
-			}
-
 		/* switchSignUp */
 			SIGNUP_SWITCH.addEventListener(ON.click, switchSignUp)
 			function switchSignUp(event) {
-				SIGNUP_FORM.setAttribute("visible", false)
-				SIGNIN_FORM.setAttribute("visible", true)
+				SIGNUP_FORM.setAttribute("visibility", false)
+				SIGNIN_FORM.setAttribute("visibility", true)
 			}
 
 		/* switchSignIn */
 			SIGNIN_SWITCH.addEventListener(ON.click, switchSignIn)
 			function switchSignIn(event) {
-				SIGNIN_FORM.setAttribute("visible", false)
-				SIGNUP_FORM.setAttribute("visible", true)
-			}
-
-	/*** search ***/
-		/* submitSearch */
-			function submitSearch(event) {				
-				// validate
-					if (!SEARCH_TEXT.value || !isNumLet(SEARCH_TEXT.value)) {
-						SEARCH_ERROR.innerText = "invalid search"
-						return
-					}
-
-				// redirect
-					window.location = "/" + SEARCH_TEXT.value
-			}
-
-	/*** change ***/
-		/* submitChangeUsername */
-			CHANGE_USERNAME_FORM.addEventListener("submit", submitChangeUsername)
-			function submitChangeUsername(event) {
-				// validate
-					if (!CHANGE_USERNAME_USERNAME.value || !isNumLet(CHANGE_USERNAME_USERNAME.value) || CHANGE_USERNAME_USERNAME.value.length < 8) {
-						CHANGE_USERNAME_ERROR.innerText = "username must be 8+ numbers and letters"
-						return
-					}
-
-				// data
-					var data = {
-						action: "changeUsername",
-						username: CHANGE_USERNAME_USERNAME.value
-					}
-
-				// updates
-					sendPost(data, function(response) {
-						if (!response.success) {
-							CHANGE_USERNAME_ERROR.innerText = response.message
-							return
-						}
-
-						CHANGE_USERNAME_ERROR.innerText = response.message
-						CHANGE_USERNAME_USERNAME.value = null
-					})
-			}
-
-		/* submitChangePassword */
-			CHANGE_PASSWORD_FORM.addEventListener("submit", submitChangePassword)
-			function submitChangePassword(event) {
-				// validate
-					if (!CHANGE_PASSWORD_OLD.value || CHANGE_PASSWORD_OLD.value.length < 8) {
-						CHANGE_PASSWORD_ERROR.innerText = "password must be 8+ characters"
-						return
-					}
-
-					if (!CHANGE_PASSWORD_NEW.value || CHANGE_PASSWORD_NEW.value.length < 8) {
-						CHANGE_PASSWORD_ERROR.innerText = "password must be 8+ characters"
-						return
-					}
-
-				// data
-					var data = {
-						action: "changePassword",
-						old: CHANGE_PASSWORD_OLD.value,
-						new: CHANGE_PASSWORD_NEW.value
-					}
-
-				// updates
-					sendPost(data, function(response) {
-						if (!response.success) {
-							CHANGE_PASSWORD_ERROR.innerText = response.message
-							return
-						}
-
-						CHANGE_PASSWORD_ERROR.innerText = response.message
-						CHANGE_PASSWORD_OLD.value = null
-						CHANGE_PASSWORD_NEW.value = null
-					})
-			}
-
-	/*** communication ***/
-		/* sendPost */
-			function sendPost(options, callback) {
-				// create request object and send to server
-					var request = new XMLHttpRequest()
-						request.open("POST", location.pathname, true)
-						request.onload = function() {
-							if (request.readyState !== XMLHttpRequest.DONE || request.status !== 200) {
-								callback({success: false, readyState: request.readyState, message: request.status})
-								return
-							}
-							
-							callback(JSON.parse(request.responseText) || {success: false, message: "unknown error"})
-						}
-						request.send(JSON.stringify(options))
-			}
-
-	/*** helpers ***/
-		/* isNumLet */
-			function isNumLet(string) {
-				return (/^[a-zA-Z0-9]+$/).test(string)
+				SIGNIN_FORM.setAttribute("visibility", false)
+				SIGNUP_FORM.setAttribute("visibility", true)
 			}
 })

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>user</title>
+		<link rel="stylesheet" href="../../../../user/stylesheet.css"/>
+		<script src="../../../../user/script.js"></script>
+	</head>
+	<body>
+		<div id="navigation">
+			<form id="search-form" method="post" action="javascript:;">
+				<input  id="search-text" type="text" placeholder="deck name"/>
+				<button id="search-button">search</button>
+				<div    id="search-error"></div>
+			</form>
+			<script node>
+				if (REQUEST.session.user) {
+					'<form id="signout-form" method="post" action="javascript:;" visibility=true>' +
+						'<button id="signout-button">sign out</button>' +
+						'<div    id="signout-error"></div>' +
+					'</form>'
+				}
+			</script>node>
+		</div>
+		<div id="container">
+			<h1 id="header"><script node>REQUEST.post.user.username</script>node></h1>
+			<script node>
+				if (REQUEST.session.user && REQUEST.session.user.id == REQUEST.post.user.id) {
+					'<form id="update-username-form" method="post" action="javascript:;" visibility=true>' + 
+						'<input  id="update-username-username" type="text" placeholder="new username" autocomplete="off"/>' + 
+						'<button id="update-username-button">update username</button>' + 
+						'<div    id="update-username-error"></div>' + 
+					'</form>' + 
+					'<form id="update-password-form" method="post" action="javascript:;" visibility=true>' + 
+						'<input  id="update-password-old" type="password" placeholder="old password" autocomplete="off"/>' + 
+						'<input  id="update-password-new" type="password" placeholder="new password" autocomplete="off"/>' + 
+						'<button id="update-password-button">update password</button>' + 
+						'<div    id="update-password-error"></div>' + 
+					'</form>' + 
+					'<form id="delete-user-form" method="post" action="javascript:;" visibility=true>' + 
+						'<input  id="delete-user-password" type="password" placeholder="password" autocomplete="off"/>' + 
+						'<button id="delete-user-button">delete account</button>' + 
+						'<div    id="delete-user-error"></div>' + 
+					'</form>' + 
+					'<form id="create-deck-form" method="post" action="javascript:;">' + 
+						'<input  id="create-deck-name" type="text" placeholder="deck name" autocomplete="off"/>' + 
+						'<button id="create-deck-button">create deck</button>' + 
+						'<div    id="create-deck-error"></div>' + 
+					'</form>'
+				}
+			</script>node>
+			<div id="decks">
+				<script node>
+					var decks = []
+					for (var i in REQUEST.post.user.decks) {
+						var deck = '<a class="deck" href="/deck/' + REQUEST.post.user.decks[i].name + '">' +
+							REQUEST.post.user.decks[i].name +
+						'</a>'
+						decks.push(deck)
+					}
+					decks.join("")
+				</script>node>
+			</div>
+		</div>
+	</body>
+</html>
