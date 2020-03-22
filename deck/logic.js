@@ -282,12 +282,12 @@
 
 				// delete
 					MAIN.accessDatabase(DB, query, function(results) {
-						if (results.success && results.count) {
+						if (!results.success) {
 							callback(results)
 							return
 						}
 
-						callback({success: true, location: "/user/" + REQUEST.session.user.name})
+						callback({success: true, location: "/"})
 						return
 					})
 			}

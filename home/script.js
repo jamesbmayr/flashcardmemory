@@ -9,24 +9,26 @@ window.addEventListener("load", function() {
 			}
 
 		/* elements */
-			var SEARCH_FORM     = document.getElementById("search-form")
-			var SEARCH_TEXT     = document.getElementById("search-text")
-			var SEARCH_BUTTON   = document.getElementById("search-button")
-			var SEARCH_ERROR    = document.getElementById("search-error")
+			var NAVIGATION              = document.getElementById("navigation")
+				var SEARCH_FORM         = document.getElementById("search-form")
+					var SEARCH_TEXT     = document.getElementById("search-text")
+					var SEARCH_BUTTON   = document.getElementById("search-button")
+					var SEARCH_ERROR    = document.getElementById("search-error")
 
-			var SIGNUP_FORM     = document.getElementById("signup-form")
-			var SIGNUP_USERNAME = document.getElementById("signup-username")
-			var SIGNUP_PASSWORD = document.getElementById("signup-password")
-			var SIGNUP_BUTTON   = document.getElementById("signup-button")
-			var SIGNUP_ERROR    = document.getElementById("signup-error")
-			var SIGNUP_SWITCH   = document.getElementById("signup-switch")
-
-			var SIGNIN_FORM     = document.getElementById("signin-form")
-			var SIGNIN_USERNAME = document.getElementById("signin-username")
-			var SIGNIN_PASSWORD = document.getElementById("signin-password")
-			var SIGNIN_BUTTON   = document.getElementById("signin-button")
-			var SIGNIN_ERROR    = document.getElementById("signin-error")
-			var SIGNIN_SWITCH   = document.getElementById("signin-switch")
+			var CONTAINER               = document.getElementById("container")
+				var HEADER              = document.getElementById("header")
+				var SIGNUP_FORM         = document.getElementById("signup-form")
+					var SIGNUP_USERNAME = document.getElementById("signup-username")
+					var SIGNUP_PASSWORD = document.getElementById("signup-password")
+					var SIGNUP_BUTTON   = document.getElementById("signup-button")
+					var SIGNUP_ERROR    = document.getElementById("signup-error")
+					var SIGNUP_SWITCH   = document.getElementById("signup-switch")
+				var SIGNIN_FORM         = document.getElementById("signin-form")
+					var SIGNIN_USERNAME = document.getElementById("signin-username")
+					var SIGNIN_PASSWORD = document.getElementById("signin-password")
+					var SIGNIN_BUTTON   = document.getElementById("signin-button")
+					var SIGNIN_ERROR    = document.getElementById("signin-error")
+					var SIGNIN_SWITCH   = document.getElementById("signin-switch")
 
 	/*** helpers ***/
 		/* sendPost */

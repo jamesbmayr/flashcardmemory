@@ -9,35 +9,33 @@ window.addEventListener("load", function() {
 			}
 
 		/* elements */
-			var SEARCH_FORM     = document.getElementById("search-form")
-			var SEARCH_TEXT     = document.getElementById("search-text")
-			var SEARCH_BUTTON   = document.getElementById("search-button")
-			var SEARCH_ERROR    = document.getElementById("search-error")
+			var NAVIGATION              = document.getElementById("navigation")
+				var SEARCH_FORM         = document.getElementById("search-form")
+					var SEARCH_TEXT     = document.getElementById("search-text")
+					var SEARCH_BUTTON   = document.getElementById("search-button")
+					var SEARCH_ERROR    = document.getElementById("search-error")
+				var SIGNOUT_FORM        = document.getElementById("signout-form")
+					var SIGNOUT_BUTTON  = document.getElementById("signout-button")
 
-			var SIGNOUT_FORM    = document.getElementById("signout-form")
-			var SIGNOUT_BUTTON  = document.getElementById("signout-button")
-			var SIGNOUT_ERROR   = document.getElementById("signout-error")
-
-			var UPDATE_USERNAME_FORM     = document.getElementById("update-username-form")
-			var UPDATE_USERNAME_USERNAME = document.getElementById("update-username-username")
-			var UPDATE_USERNAME_BUTTON   = document.getElementById("update-username-button")
-			var UPDATE_USERNAME_ERROR    = document.getElementById("update-username-error")
-
-			var UPDATE_PASSWORD_FORM     = document.getElementById("update-password-form")
-			var UPDATE_PASSWORD_OLD      = document.getElementById("update-password-old")
-			var UPDATE_PASSWORD_NEW      = document.getElementById("update-password-new")
-			var UPDATE_PASSWORD_BUTTON   = document.getElementById("update-password-button")
-			var UPDATE_PASSWORD_ERROR    = document.getElementById("update-password-error")
-
-			var DELETE_USER_FORM     = document.getElementById("delete-user-form")
-			var DELETE_USER_PASSWORD = document.getElementById("delete-user-password")
-			var DELETE_USER_BUTTON   = document.getElementById("delete-user-button")
-			var DELETE_USER_ERROR    = document.getElementById("delete-user-error")
-
-			var CREATE_DECK_FORM   = document.getElementById("create-deck-form")
-			var CREATE_DECK_NAME   = document.getElementById("create-deck-name")
-			var CREATE_DECK_BUTTON = document.getElementById("create-deck-button")
-			var CREATE_DECK_ERROR  = document.getElementById("create-deck-error")
+			var CONTAINER                        = document.getElementById("container")
+				var HEADER                       = document.getElementById("header")
+				var UPDATE_USERNAME_FORM         = document.getElementById("update-username-form")
+					var UPDATE_USERNAME_USERNAME = document.getElementById("update-username-username")
+					var UPDATE_USERNAME_BUTTON   = document.getElementById("update-username-button")
+					var UPDATE_USERNAME_ERROR    = document.getElementById("update-username-error")
+				var UPDATE_PASSWORD_FORM         = document.getElementById("update-password-form")
+					var UPDATE_PASSWORD_OLD      = document.getElementById("update-password-old")
+					var UPDATE_PASSWORD_NEW      = document.getElementById("update-password-new")
+					var UPDATE_PASSWORD_BUTTON   = document.getElementById("update-password-button")
+					var UPDATE_PASSWORD_ERROR    = document.getElementById("update-password-error")
+				var DELETE_USER_FORM             = document.getElementById("delete-user-form")
+					var DELETE_USER_PASSWORD     = document.getElementById("delete-user-password")
+					var DELETE_USER_BUTTON       = document.getElementById("delete-user-button")
+					var DELETE_USER_ERROR        = document.getElementById("delete-user-error")
+				var CREATE_DECK_FORM             = document.getElementById("create-deck-form")
+					var CREATE_DECK_NAME         = document.getElementById("create-deck-name")
+					var CREATE_DECK_BUTTON       = document.getElementById("create-deck-button")
+					var CREATE_DECK_ERROR        = document.getElementById("create-deck-error")
 
 	/*** helpers ***/
 		/* sendPost */
@@ -88,7 +86,6 @@ window.addEventListener("load", function() {
 					// un-authenticate
 						sendPost(data, function(response) {
 							if (!response.success) {
-								SIGNOUT_ERROR.innerText = response.message
 								return
 							}
 

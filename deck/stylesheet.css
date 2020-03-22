@@ -1,6 +1,685 @@
+/*** page ***/
+	html, body {
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		min-width: 100%;
+		border: 0px;
+		padding: 0px;
+		margin: 0px;
+		background-color: #dddddd;
+		font-family: monospace;
+		color: #222222;
+	}
+
+/*** navigation ***/
+	#navigation {
+		width: 100%;
+		height: 50px;
+		background-color: #222222;
+		font-family: monospace;
+		color: #dddddd;
+		position: fixed;
+		z-index: 1000;
+		box-shadow: 0px 0px 5px #333333;
+	}
+
+	/* home */
+		#navigation-home {
+			float: left;
+			width: 90px;
+			height: 20px;
+			margin: 10px;
+			padding: 5px;
+			font-size: 15px;
+			color: #dddddd;
+			font-weight: bold;
+			text-decoration: none;
+			cursor: pointer;
+			text-align: center;
+			outline: none;
+			background-color: #555555;
+			border-radius: 10px;
+			line-height: 1.5;
+			box-shadow: 0px 0px 5px #333333;
+			display: inline-block;
+			vertical-align: top;
+		}
+
+		#navigation-home:focus, #navigation-home:hover {
+			background-color: #333333;
+			box-shadow: 0px 0px 10px #555555;
+		}
+
+		#navigation-home:visited {
+			color: #dddddd;
+		}
+
+	/* search */
+		#search-form {
+			float: left;
+			width: calc(100% - 240px);
+			height: 30px;
+			padding: 10px 0px 10px 0px;
+		}
+
+		#search-text {
+			float: left;
+			width: calc(100% - 110px);
+			height: 20px;
+			padding: 5px;
+			outline: none;
+			border-radius: 10px 0px 0px 10px;
+			border: 0px;
+			font-family: monospace;
+			font-size: 15px;
+			color: #222222;
+			background-color: #ffffff;
+		}
+
+		#search-text:hover, #search-text:focus {
+			box-shadow: 0px 0px 10px #555555;
+		}
+
+		#search-button {
+			float: left;
+			width: 100px;
+			height: 30px;
+			border: 0px;
+			outline: none;
+			cursor: pointer;
+			border-radius: 0px 10px 10px 0px;
+			font-family: monospace;
+			font-size: 15px;
+			font-weight: bold;
+			background-color: #555555;
+			color: #dddddd;
+			box-shadow: 0px 0px 5px #333333;
+		}
+
+		#search-button:hover, #search-button:focus {
+			background-color: #333333;
+			box-shadow: 0px 0px 10px #555555;
+		}
+
+	/* signout */
+		#signout-form {
+			float: left;
+			width: 50px;
+			height: 30px;
+			padding: 10px;
+		}
+
+		#signout-button {
+			float: left;
+			width: 100px;
+			height: 30px;
+			border: 0px;
+			outline: none;
+			cursor: pointer;
+			border-radius: 10px;
+			font-family: monospace;
+			font-size: 15px;
+			font-weight: bold;
+			background-color: #555555;
+			color: #dddddd;
+			box-shadow: 0px 0px 5px #333333;
+		}
+
+		#signout-button:hover, #signout-button:focus {
+			background-color: #333333;
+			box-shadow: 0px 0px 10px #555555;
+		}
+
+	/* signin */
+		#navigation-signin {
+			float: left;
+			width: 90px;
+			height: 20px;
+			margin: 10px;
+			padding: 5px;
+			font-size: 15px;
+			color: #dddddd;
+			font-weight: bold;
+			text-decoration: none;
+			cursor: pointer;
+			text-align: center;
+			outline: none;
+			background-color: #555555;
+			border-radius: 10px;
+			line-height: 1.5;
+			box-shadow: 0px 0px 5px #333333;
+			display: inline-block;
+			vertical-align: top;
+		}
+
+		#navigation-signin:focus, #navigation-signin:hover {
+			background-color: #333333;
+			box-shadow: 0px 0px 10px #555555;
+		}
+
+		#navigation-signin:visited {
+			color: #dddddd;
+		}
+
+/*** container ***/
+	#container {
+		width: calc(100% - 100px);
+		max-width: 800px;
+		height: auto;
+		min-height: calc(100% - 50px);
+		margin: auto auto;
+		margin-top: 50px;
+		transition: 0.1s;
+	}
+
+	/* header */
+		#header {
+			float: left;
+			width: 100%;
+			font-size: 100px;
+			font-weight: bold;
+			line-height: 1;
+			margin: 20px 0px 10px 0px;
+			text-align: center;
+		}
+
+		#creator {
+			float: left;
+			width: 100%;
+			font-size: 50px;
+			text-align: center;
+			margin: 0px 0px 10px 0px;
+		}
+
+		#creator a {
+			font-weight: bold;
+			text-decoration: none;
+			outline: none;
+			color: #3377dd;
+			font-family: monospace;
+		}
+
+		#creator a:focus, #creator a:hover {
+			text-shadow: 0px 0px 5px #3377dd;
+		}
+
+		#creator:visited {
+			color: #3377dd;
+		}
+
+	/* create game */
+		#game-create-form {
+			float: left;
+			height: 30px;
+			width: 50%;
+			margin-bottom: 10px;
+			transition: 0.1s;
+		}
+
+		#game-create-button {
+			height: 30px;
+			border: 0px;
+			outline: none;
+			cursor: pointer;
+			font-family: monospace;
+			font-size: 15px;
+			font-weight: bold;
+			background-color: #555555;
+			color: #dddddd;
+			box-shadow: 0px 0px 5px #333333;
+		}
+
+		#game-create-button:hover, #game-create-button:focus {
+			background-color: #333333;
+			box-shadow: 0px 0px 10px #555555;
+		}
+
+		#game-create-form.full-width {
+			width: 100%;
+			text-align: center;
+		}
+
+		#game-create-form:not(.full-width) #game-create-button {
+			float: right;
+			width: 100px;
+			border-radius: 10px 0px 0px 10px;
+		}
+
+		#game-create-form.full-width #game-create-button {
+			width: 200px;
+			border-radius: 10px;
+		}
+
+	/* edit deck button */
+		#activate-edit-form {
+			float: left;
+			height: 30px;
+			width: 50%;
+			margin-bottom: 10px;
+			transition: 0.1s;
+		}
+
+		#activate-edit-button {
+			float: left;
+			width: 100px;
+			height: 30px;
+			border: 0px;
+			outline: none;
+			cursor: pointer;
+			border-radius: 0px 10px 10px 0px;
+			font-family: monospace;
+			font-size: 15px;
+			font-weight: bold;
+			background-color: #555555;
+			color: #dddddd;
+			box-shadow: 0px 0px 5px #333333;
+		}
+
+		#activate-edit-button:hover, #activate-edit-button:focus {
+			background-color: #333333;
+			box-shadow: 0px 0px 10px #555555;
+		}
+
+	/* update form */
+		#update-deck-form {
+			float: left;
+			width: 100%;
+			text-align: center;
+			margin-bottom: 10px;
+			transition: 0.1s;
+		}
+
+		#update-deck-form label {
+			float: left;
+			width: 100%;
+			height: 30px;
+			text-align: center;
+			color: #222222;
+			font-weight: bold;
+			font-family: monospace;
+			font-size: 15px;
+			line-height: 2;
+			margin-bottom: 10px;
+		}
+
+		#update-deck-name {
+			float: right;
+			width: calc(100% - 150px);
+			height: 20px;
+			padding: 5px;
+			outline: none;
+			border-radius: 10px;
+			border: 0px;
+			font-family: monospace;
+			font-size: 15px;
+			color: #222222;
+			background-color: #ffffff;
+		}
+
+		#update-deck-button {
+			width: 200px;
+			height: 30px;
+			border: 0px;
+			outline: none;
+			cursor: pointer;
+			border-radius: 10px 0px 0px 10px;
+			font-family: monospace;
+			font-size: 15px;
+			font-weight: bold;
+			background-color: #555555;
+			color: #dddddd;
+			box-shadow: 0px 0px 5px #333333;
+		}
+
+		#update-deck-button:hover, #update-deck-button:focus {
+			background-color: #333333;
+			box-shadow: 0px 0px 10px #555555;
+		}
+
+		#update-deck-cancel {
+			width: 90px;
+			height: 20px;
+			padding: 5px;
+			font-size: 15px;
+			color: #dddddd;
+			font-weight: bold;
+			text-decoration: none;
+			cursor: pointer;
+			text-align: center;
+			outline: none;
+			background-color: #555555;
+			border-radius: 0px 10px 10px 0px;
+			line-height: 1.5;
+			display: inline-block;
+			vertical-align: top;
+			box-shadow: 0px 0px 5px #333333;
+		}
+
+		#update-deck-cancel:focus, #update-deck-cancel:hover {
+			background-color: #333333;
+			box-shadow: 0px 0px 10px #555555;
+		}
+
+		#update-deck-cancel:visited {
+			color: #dddddd;
+		}
+
+		#update-deck-delete {
+			width: 140px;
+			margin-left: 20px;
+			height: 20px;
+			padding: 5px;
+			font-size: 15px;
+			color: #dddddd;
+			font-weight: bold;
+			text-decoration: none;
+			cursor: pointer;
+			text-align: center;
+			outline: none;
+			background-color: #555555;
+			border-radius: 10px;
+			line-height: 1.5;
+			display: inline-block;
+			vertical-align: top;
+			box-shadow: 0px 0px 5px #333333;
+		}
+
+		#update-deck-delete:focus, #update-deck-delete:hover {
+			background-color: #333333;
+			box-shadow: 0px 0px 10px #555555;
+		}
+
+	/* delete form */
+		#delete-deck-form {
+			float: left;
+			width: 100%;
+			text-align: center;
+			margin-bottom: 10px;
+			transition: 0.1s;
+		}
+
+		#delete-deck-button {
+			width: 200px;
+			height: 30px;
+			border: 0px;
+			outline: none;
+			cursor: pointer;
+			border-radius: 10px;
+			font-family: monospace;
+			font-size: 15px;
+			font-weight: bold;
+			background-color: #555555;
+			color: #dddddd;
+			box-shadow: 0px 0px 5px #333333;
+		}
+
+		#delete-deck-button:hover, #delete-deck-button:focus {
+			background-color: #333333;
+			box-shadow: 0px 0px 10px #555555;
+		}
+
+	/* pairs */
+		#pairs {
+			float: left;
+			width: 100%;
+		}
+
+		.pair {
+			float: left;
+			width: 100%;
+			margin-bottom: 10px;
+		}
+
+		.pair-card {
+			float: left;
+			width: calc(50% - 30px);
+			height: auto;
+			min-height: 90px;
+			margin: 0px 5px;
+			background-color: #aaaaaa;
+			border-radius: 10px;
+			padding: 10px;
+		}
+
+		.pair-card-display {
+			float: left;
+			width: 100%;
+			height: 100%;
+			min-height: 90px;
+			text-align: center;
+			padding: auto auto;
+			border-radius: 5px;
+			font-size: 15px;
+			display: table;
+			vertical-align: middle;
+			font-weight: bold;
+			transition: 0.1s;
+		}
+
+		.pair-card-display span {
+			display: table-cell;
+			vertical-align: middle;
+		}
+
+		.pair-card-edit {
+			float: left;
+			width: 100%;
+			height: 100%;
+			min-height: 90px;
+			text-align: center;
+			padding: auto auto;
+			transition: 0.1s;
+		}
+
+		.pair-card-edit label {
+			float: left;
+			width: 100%;
+			margin-bottom: 10px;
+			color: #222222;
+			font-weight: bold;
+			font-family: monospace;
+			font-size: 15px;
+			line-height: 2;
+			height: 30px;
+		}
+
+		.pair-card-edit label:last-child {
+			margin-bottom: 0px;
+		}
+
+		.pair-card-edit input {
+			float: right;
+			width: calc(100% - 150px);
+			border-radius: 10px;
+			outline: none;
+			border: 0px;
+			background-color: #ffffff;
+			color: #222222;
+			font-size: 15px;
+			font-family: monospace;
+			height: 20px;
+			padding: 5px;
+		}
+
+		.pair-card-edit input[type="color"] {
+			cursor: pointer;
+		}
+
+		.pair-card-edit input:focus, .pair-card-edit input:hover {
+			box-shadow: 0px 0px 10px #555555;
+		}
+
+		.pair-delete-form {
+			float: left;
+			width: 100%;
+			text-align: center;
+			margin-top: 10px;
+			margin-bottom: 20px;
+		}
+
+		.pair-delete-button {
+			width: 200px;
+			height: 30px;
+			border: 0px;
+			outline: none;
+			cursor: pointer;
+			border-radius: 10px;
+			font-family: monospace;
+			font-size: 15px;
+			font-weight: bold;
+			background-color: #555555;
+			color: #dddddd;
+			box-shadow: 0px 0px 5px #333333;
+		}
+
+		.pair-delete-button:hover, .pair-delete-button:focus {
+			background-color: #333333;
+			box-shadow: 0px 0px 10px #555555;
+		}
+
+	/* create form */
+		#pair-create-form {
+			float: left;
+			width: 100%;
+			text-align: center;
+			margin-bottom: 10px;
+			transition: 0.1s;
+		}
+
+		#pair-create-button {
+			width: 200px;
+			height: 30px;
+			border: 0px;
+			outline: none;
+			cursor: pointer;
+			border-radius: 10px;
+			font-family: monospace;
+			font-size: 15px;
+			font-weight: bold;
+			background-color: #555555;
+			color: #dddddd;
+			box-shadow: 0px 0px 5px #333333;
+		}
+
+		#pair-create-button:hover, #pair-create-button:focus {
+			background-color: #333333;
+			box-shadow: 0px 0px 10px #555555;
+		}
+
+/*** game-container ***/
+	#game-container {
+		width: calc(100% - 100px);
+		max-width: 800px;
+		height: auto;
+		min-height: calc(100% - 50px);
+		margin: auto auto;
+		margin-top: 50px;
+		transition: 0.1s;
+	}
+
+	/* end game */
+		#game-end-form {
+			float: left;
+			width: 100%;
+			text-align: center;
+			margin-top: 10px;
+			margin-bottom: 20px;
+			transition: 0.1s;
+		}
+
+		#game-end-button {
+			width: 200px;
+			height: 30px;
+			border: 0px;
+			outline: none;
+			cursor: pointer;
+			border-radius: 10px;
+			font-family: monospace;
+			font-size: 15px;
+			font-weight: bold;
+			background-color: #555555;
+			color: #dddddd;
+			box-shadow: 0px 0px 5px #333333;
+		}
+
+		#game-end-button:hover, #game-end-button:focus {
+			background-color: #333333;
+			box-shadow: 0px 0px 10px #555555;
+		}
+
+	/* table */
+		#game-table {
+			float: left;
+			width: 100%;
+			text-align: center;
+		}
+
+		.game-card {
+			height: 150px;
+			width: 150px;
+			border-radius: 10px;
+			outline: none;
+			cursor: pointer;
+			box-shadow: 0px 0px 5px #333333;
+			margin: 20px;
+			overflow: hidden;
+			border: 0px;
+			padding: 0px;
+			transition: 0.5s;
+			background-color: #222222;
+		}
+
+		.game-card:focus, .game-card:hover {
+			box-shadow: 0px 0px 10px #555555;
+		}
+
+		.game-card-back {
+			float: left;
+			height: 100%;
+			width: 100%;
+			background-color: #222222;
+			transition: 0.1s;
+		}
+
+		.game-card-front {
+			float: left;
+			height: 100%;
+			width: 100%;
+			vertical-align: middle;
+			display: table;
+			font-size: 15px;
+			font-family: monospace;
+			font-weight: bold;
+			transition: 0.1s;
+		}
+
+		.game-card-front span {
+			display: table-cell;
+			vertical-align: middle;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-o-user-select: none;
+			user-select: none;
+		}
+
 /*** status ***/
 	/* visibility */
-		*[visibility="false"] {
+		*[visibility=false] {
 			pointer-events: none;
-			display: none;
+			opacity: 0;
+		}
+
+		#container[visibility=false], 
+		#game-container[visibility=false],
+		form[visibility=false],
+		.pair-card div[visibility=false], .game-card div[visibility=false] {
+			height: 0px !important;
+			width: 0px !important;
+			margin: 0px !important;
+			padding: 0px !important;
+			min-height: 0px !important;
+			min-width: 0px !important;
+			font-size: 0px !important;
 		}
