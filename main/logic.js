@@ -108,6 +108,9 @@
 								<meta property="og:image" content="https://flashcards.herokuapp.com/logo.png"/>\
 								<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>'
 					break
+					case "fonts":
+							return '<link href="https://fonts.googleapis.com/css?family=Sen" rel="stylesheet">'
+						break
 
 					case "constants":
 						return {

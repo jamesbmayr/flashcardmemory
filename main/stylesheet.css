@@ -8,7 +8,7 @@
 		padding: 0px;
 		margin: 0px;
 		background-color: #dddddd;
-		font-family: monospace;
+		font-family: "Sen", sans-serif;
 		color: #222222;
 	}
 
@@ -55,7 +55,7 @@
 			text-align: left;
 			color: #222222;
 			font-weight: bold;
-			font-family: monospace;
+			font-family: "Sen", sans-serif;
 			font-size: 15px;
 			line-height: 2;
 			margin-bottom: 10px;
@@ -69,7 +69,7 @@
 			outline: none;
 			cursor: pointer;
 			border-radius: 10px;
-			font-family: monospace;
+			font-family: "Sen", sans-serif;
 			font-size: 15px;
 			font-weight: bold;
 			background-color: #555555;
@@ -88,7 +88,7 @@
 			text-decoration: none;
 			outline: none;
 			color: #3377dd;
-			font-family: monospace;
+			font-family: "Sen", sans-serif;
 			cursor: pointer;
 			font-size: 15px;
 		}
@@ -109,7 +109,7 @@
 			outline: none;
 			border-radius: 10px;
 			border: 0px;
-			font-family: monospace;
+			font-family: "Sen", sans-serif;
 			font-size: 15px;
 			color: #222222;
 			background-color: #ffffff;
@@ -132,7 +132,7 @@
 		width: 100%;
 		height: 50px;
 		background-color: #222222;
-		font-family: monospace;
+		font-family: "Sen", sans-serif;
 		color: #dddddd;
 		position: fixed;
 		z-index: 1000;
@@ -261,7 +261,7 @@
 		height: auto;
 		text-align: center;
 		margin: auto auto;
-		font-family: monospace;
+		font-family: "Sen", sans-serif;
 		color: #c70f0f;
 		font-size: 15px;
 		font-weight: bold;
