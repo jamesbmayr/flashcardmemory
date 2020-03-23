@@ -618,12 +618,14 @@
 			try {
 				MONGO.connect(DB, { useUnifiedTopology: true }, function(error, client) {
 					// connect
-						var db = client.db(ENVIRONMENT.db_name)
 						if (error) {
+							logError(error)
 							callback({success: false, message: error})
 							client.close()
 							return
 						}
+
+						var db = client.db(ENVIRONMENT.db_name)
 
 					// find
 						if (query.command == "find") {
