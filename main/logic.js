@@ -60,7 +60,6 @@
 	/* getEnvironment */
 		module.exports.getEnvironment = getEnvironment
 		function getEnvironment() {
-			console.log(arguments.callee.name)
 			try {
 				if (process.env.DOMAIN !== undefined) {
 					return {
@@ -94,7 +93,6 @@
 	/* getAsset */
 		module.exports.getAsset = getAsset
 		function getAsset(index) {
-			console.log(arguments.callee.name)
 			try {
 				switch (index) {
 					case "logo":
@@ -131,7 +129,6 @@
 	/* getContentType */
 		module.exports.getContentType = getContentType
 		function getContentType(string) {
-			console.log(arguments.callee.name)
 			try {
 				var array = string.split(".")
 				var extension = array[array.length - 1].toLowerCase()
@@ -227,7 +224,6 @@
 	/* isNumLet */
 		module.exports.isNumLet = isNumLet
 		function isNumLet(string) {
-			console.log(arguments.callee.name)
 			try {
 				return (/^[a-zA-Z0-9]+$/).test(string)
 			}
@@ -241,7 +237,6 @@
 	/* renderHTML */
 		module.exports.renderHTML = renderHTML
 		function renderHTML(REQUEST, path, callback) {
-			console.log(arguments.callee.name)
 			try {
 				var html = {}
 				FS.readFile(path, "utf8", function (error, file) {
@@ -277,7 +272,6 @@
 	/* duplicateObject */
 		module.exports.duplicateObject = duplicateObject
 		function duplicateObject(object) {
-			console.log(arguments.callee.name)
 			try {
 				return JSON.parse(JSON.stringify(object))
 			}
@@ -291,7 +285,6 @@
 	/* hashRandom */
 		module.exports.hashRandom = hashRandom
 		function hashRandom(string, salt) {
-			console.log(arguments.callee.name)
 			try {
 				return CRYPTO.createHmac("sha512", salt).update(string).digest("hex")
 			}
@@ -304,7 +297,6 @@
 	/* generateRandom */
 		module.exports.generateRandom = generateRandom
 		function generateRandom(set, length) {
-			console.log(arguments.callee.name)
 			try {
 				set = set || "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 				length = length || 32
@@ -325,7 +317,6 @@
 	/* chooseRandom */
 		module.exports.chooseRandom = chooseRandom
 		function chooseRandom(options) {
-			console.log(arguments.callee.name)
 			try {
 				if (!Array.isArray(options)) {
 					return false
@@ -344,7 +335,6 @@
 	/* createSession */
 		module.exports.createSession = createSession
 		function createSession(REQUEST, RESPONSE, DB, callback) {
-			console.log(arguments.callee.name)
 			try {
 				// session
 					var session = {
@@ -389,7 +379,6 @@
 	/* readSession */
 		module.exports.readSession = readSession
 		function readSession(REQUEST, RESPONSE, DB, callback) {
-			console.log(arguments.callee.name)
 			try {
 				// no cookie
 					if (!REQUEST.cookie.session || REQUEST.cookie.session == null || REQUEST.cookie.session == 0) {
@@ -429,7 +418,6 @@
 	/* updateSession */
 		module.exports.updateSession = updateSession
 		function updateSession(REQUEST, RESPONSE, DB, callback) {
-			console.log(arguments.callee.name)
 			try {
 				// query
 					var query = {
@@ -467,7 +455,6 @@
 	/* accessDatabase */
 		module.exports.accessDatabase = accessDatabase
 		function accessDatabase(DB, query, callback) {
-			console.log(arguments.callee.name)
 			try {
 				// connect
 					if (ENVIRONMENT.db_url) {
@@ -614,9 +601,8 @@
 	/* accessMongo */
 		module.exports.accessMongo = accessMongo
 		function accessMongo(DB, query, callback) {
-			console.log(arguments.callee.name)
 			try {
-				MONGO.connect(DB, { useUnifiedTopology: true }, function(error, client) {
+				MONGO.connect(DB, { useNewUrlParser: true, useUnifiedTopology: true }, function(error, client) {
 					// connect
 						if (error) {
 							logError(error)

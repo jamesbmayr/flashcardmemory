@@ -8,7 +8,6 @@
 	/* signUp */
 		module.exports.signUp = signUp
 		function signUp(REQUEST, RESPONSE, DB, callback) {
-			console.log(arguments.callee.name)
 			try {
 				// validate
 					if (!REQUEST.post.username || !MAIN.isNumLet(REQUEST.post.username) || REQUEST.post.username.length < 8) {
@@ -50,7 +49,6 @@
 	/* signIn */
 		module.exports.signIn = signIn
 		function signIn(REQUEST, RESPONSE, DB, callback) {
-			console.log(arguments.callee.name)
 			try {
 				// validate
 					if (!REQUEST.post.username || !MAIN.isNumLet(REQUEST.post.username) || REQUEST.post.username.length < 8) {
@@ -116,7 +114,6 @@
 	/* signOut */
 		module.exports.signOut = signOut
 		function signOut(REQUEST, RESPONSE, DB, callback) {
-			console.log(arguments.callee.name)
 			try {
 				// query
 					var query = {

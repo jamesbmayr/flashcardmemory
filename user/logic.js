@@ -8,7 +8,6 @@
 	/* createUser */
 		module.exports.createUser = createUser
 		function createUser(REQUEST, RESPONSE, DB, callback) {
-			console.log(arguments.callee.name)
 			try {
 				// user
 					var salt = MAIN.generateRandom()
@@ -67,7 +66,6 @@
 	/* readUser */
 		module.exports.readUser = readUser
 		function readUser(REQUEST, RESPONSE, DB, callback) {
-			console.log(arguments.callee.name)
 			try {
 				// query
 					var query = {
@@ -100,7 +98,6 @@
 	/* readThisUser */
 		module.exports.readThisUser = readThisUser
 		function readThisUser(REQUEST, RESPONSE, DB, callback) {
-			console.log(arguments.callee.name)
 			try {
 				// no user id
 					if (!REQUEST.session.userId) {
@@ -143,7 +140,6 @@
 	/* updateUsername */
 		module.exports.updateUsername = updateUsername
 		function updateUsername(REQUEST, RESPONSE, DB, callback) {
-			console.log(arguments.callee.name)
 			try {
 				// authenticated?
 					if (!REQUEST.session.user.id) {
@@ -204,7 +200,6 @@
 	/* updatePassword */
 		module.exports.updatePassword = updatePassword
 		function updatePassword(REQUEST, RESPONSE, DB, callback) {
-			console.log(arguments.callee.name)
 			try {
 				// authenticated?
 					if (!REQUEST.session.user.id) {
@@ -259,7 +254,6 @@
 	/* deleteUser */
 		module.exports.deleteUser = deleteUser
 		function deleteUser(REQUEST, RESPONSE, DB, callback) {
-			console.log(arguments.callee.name)
 			try {
 				// authenticated?
 					if (!REQUEST.session.user.id) {

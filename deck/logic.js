@@ -8,7 +8,6 @@
 	/* createDeck */
 		module.exports.createDeck = createDeck
 		function createDeck(REQUEST, RESPONSE, DB, callback) {
-			console.log(arguments.callee.name)
 			try {
 				// validate
 					if (!REQUEST.session.user) {
@@ -76,7 +75,6 @@
 	/* readDeck */
 		module.exports.readDeck = readDeck
 		function readDeck(REQUEST, RESPONSE, DB, callback) {
-			console.log(arguments.callee.name)
 			try {
 				// query
 					var query = {
@@ -130,7 +128,6 @@
 	/* readDecks */
 		module.exports.readDecks = readDecks
 		function readDecks(REQUEST, RESPONSE, DB, callback) {
-			console.log(arguments.callee.name)
 			try {
 				// query
 					var query = {
@@ -163,7 +160,6 @@
 	/* readThisUsersDecks */
 		module.exports.readThisUsersDecks = readThisUsersDecks
 		function readThisUsersDecks(REQUEST, RESPONSE, DB, callback) {
-			console.log(arguments.callee.name)
 			try {
 				// query
 					var query = {
@@ -197,7 +193,6 @@
 	/* updateDeck */
 		module.exports.updateDeck = updateDeck
 		function updateDeck(REQUEST, RESPONSE, DB, callback) {
-			console.log(arguments.callee.name)
 			try {
 				// validate
 					if (!REQUEST.session.user) {
@@ -266,7 +261,6 @@
 	/* deleteDeck */
 		module.exports.deleteDeck = deleteDeck
 		function deleteDeck(REQUEST, RESPONSE, DB, callback) {
-			console.log(arguments.callee.name)
 			try {
 				// validate
 					if (!REQUEST.session.user) {

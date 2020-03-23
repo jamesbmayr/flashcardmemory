@@ -38,7 +38,6 @@
 /*** request ***/
 	/* handleRequest */
 		function handleRequest(REQUEST, RESPONSE) {
-			console.log(arguments.callee.name)
 			// collect data
 				var data = ""
 				REQUEST.on("data", function (chunk) { data += chunk })
@@ -49,7 +48,6 @@
 
 	/* parseRequest */
 		function parseRequest(REQUEST, RESPONSE, data) {
-			console.log(arguments.callee.name)
 			try {
 				// get request info
 					REQUEST.get    = QS.parse(REQUEST.url.split("?")[1]) || {}
@@ -79,7 +77,6 @@
 
 	/* routeRequest */
 		function routeRequest(REQUEST, RESPONSE) {
-			console.log(arguments.callee.name)
 			try {
 				// get
 					if (REQUEST.method == "GET") {
@@ -338,7 +335,6 @@
 
 	/* _302 */
 		function _302(REQUEST, RESPONSE, data) {
-			console.log(arguments.callee.name)
 			MAIN.logStatus("redirecting to " + (data || "/"))
 			RESPONSE.writeHead(302, { Location: data || "../../../../" })
 			RESPONSE.end()
@@ -346,7 +342,6 @@
 
 	/* _403 */
 		function _403(REQUEST, RESPONSE, data) {
-			console.log(arguments.callee.name)
 			MAIN.logError(data)
 			RESPONSE.writeHead(403, { "Content-Type": "text/json" })
 			RESPONSE.end( JSON.stringify({success: false, error: data}) )
@@ -354,7 +349,6 @@
 
 	/* _404 */
 		function _404(REQUEST, RESPONSE, data) {
-			console.log(arguments.callee.name)
 			MAIN.logError(data)
 			RESPONSE.writeHead(404, { "Content-Type": "text/html; charset=utf-8" })
 			MAIN.renderHTML(REQUEST, "./main/_404.html", function (html) {
