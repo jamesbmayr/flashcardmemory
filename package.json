@@ -1,7 +1,7 @@
 {
-  "name": "flashcards",
+  "name": "flashcardmemory",
   "version": "1.0.0",
-  "description": "flashcards",
+  "description": "flashcardmemory",
   "main": "index.js",
   "scripts": {
     "test": "echo \"test\"",
