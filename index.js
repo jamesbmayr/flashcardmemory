@@ -14,7 +14,7 @@
 
 /*** database ***/
 	if (ENVIRONMENT.db_url) {
-		var DB = "mongodb://" + ENVIRONMENT.db_username + ":" + ENVIRONMENT.db_password + "@" + ENVIRONMENT.db_url
+		var DB = "mongodb+srv://" + ENVIRONMENT.db_username + ":" + ENVIRONMENT.db_password + "@" + ENVIRONMENT.db_url
 	}
 	else {
 		var DB = {
@@ -63,7 +63,7 @@
 
 				// log it
 					if (REQUEST.url !== "/favicon.ico") {
-						MAIN.logStatus((REQUEST.cookie.session || "new") + " @ " + REQUEST.ip + "\n[" + REQUEST.method + "] " + REQUEST.path.join("/") + "\n" + JSON.stringify(REQUEST.method == "GET" ? REQUEST.get : REQUEST.post))
+						MAIN.logStatus((REQUEST.cookie.session || "new") + " @ " + REQUEST.ip + "\n[" + REQUEST.method + "] " + REQUEST.path.join("/") + "\n" + JSON.stringify(REQUEST.method == "GET" ? REQUEST.get : Object.keys(REQUEST.post)))
 					}
 					
 				// session

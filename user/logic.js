@@ -276,7 +276,7 @@
 				// query
 					var query = {
 						collection: "users",
-						command: "remove",
+						command: "delete",
 						filters: {id: REQUEST.session.user.id},
 						document: null,
 						options: {}

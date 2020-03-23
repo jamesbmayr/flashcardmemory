@@ -235,7 +235,10 @@
 								collection: "decks",
 								command: "update",
 								filters: {creator: REQUEST.session.user.id, id: REQUEST.post.deck.id},
-								document: REQUEST.post.deck,
+								document: {
+									name: REQUEST.post.deck.name,
+									pairs: REQUEST.post.deck.pairs
+								},
 								options: {}
 							}
 
@@ -274,7 +277,7 @@
 				// query
 					var query = {
 						collection: "decks",
-						command: "remove",
+						command: "delete",
 						filters: {creator: REQUEST.session.user.id, id: REQUEST.post.deck.id},
 						document: null,
 						options: {}

@@ -257,7 +257,8 @@
 
 /*** error ***/
 	.error {
-		width: auto;
+		float: left;
+		width: 100%;
 		height: auto;
 		text-align: center;
 		margin: auto auto;

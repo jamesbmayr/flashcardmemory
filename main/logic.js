@@ -69,7 +69,8 @@
 						debug:      (process.env.DEBUG || false),
 						db_username: process.env.DB_USERNAME,
 						db_password: process.env.DB_PASSWORD,
-						db_url:      process.env.DB_URL
+						db_url:      process.env.DB_URL,
+						db_name:     process.env.DB_NAME
 					}
 				}
 				else {
@@ -79,7 +80,8 @@
 						debug:       true,
 						db_username: null,
 						db_password: null,
-						db_url:      null
+						db_url:      null,
+						db_name:     null
 					}
 				}
 			}
@@ -100,12 +102,12 @@
 					break
 					case "meta":
 						return '<meta charset="UTF-8"/>\
-								<meta name="description" content="flashcards"/>\
+								<meta name="description" content="flashcardmemory"/>\
 								<meta name="author" content="James Mayr"/>\
-								<meta property="og:title" content="flashcards"/>\
-								<meta property="og:url" content="https://flashcards.herokuapp.com"/>\
-								<meta property="og:description" content="flashcards"/>\
-								<meta property="og:image" content="https://flashcards.herokuapp.com/logo.png"/>\
+								<meta property="og:title" content="flashcardmemory"/>\
+								<meta property="og:url" content="https://flashcardmemory.herokuapp.com"/>\
+								<meta property="og:description" content="flashcardmemory"/>\
+								<meta property="og:image" content="https://flashcardmemory.herokuapp.com/logo.png"/>\
 								<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>'
 					break
 					case "fonts":
@@ -413,6 +415,7 @@
 						}
 
 						// update
+							REQUEST.session = results.documents[0]
 							updateSession(REQUEST, RESPONSE, DB, callback)
 							return
 					})
@@ -432,7 +435,7 @@
 					var query = {
 						collection: "sessions",
 						command: "update",
-						filters: {id: REQUEST.cookie.session},
+						filters: {id: REQUEST.session.id},
 						document: {updated: new Date().getTime()},
 						options: {}
 					}
@@ -574,8 +577,8 @@
 							return
 					}
 
-				// remove
-					if (query.command == "remove") {
+				// delete
+					if (query.command == "delete") {
 						// all documents
 							var documentKeys = Object.keys(DB[query.collection])
 
@@ -611,10 +614,11 @@
 	/* accessMongo */
 		module.exports.accessMongo = accessMongo
 		function accessMongo(DB, query, callback) {
+			console.log(arguments.callee.name)
 			try {
-				MONGO.connect(DB, { useNewUrlParser: true }, function(error, client) {
+				MONGO.connect(DB, { useUnifiedTopology: true }, function(error, client) {
 					// connect
-						var db = client.db("flashcards")
+						var db = client.db(ENVIRONMENT.db_name)
 						if (error) {
 							callback({success: false, message: error})
 							client.close()
@@ -627,7 +631,7 @@
 								db.collection(query.collection).find(query.filters).toArray(function (error, documents) {
 									// error
 										if (error) {
-											callback({success: false, message: error})
+											callback({success: false, message: JSON.stringify(error)})
 											client.close()
 											return
 										}
@@ -649,10 +653,10 @@
 					// insert
 						if (query.command == "insert") {
 							// execute query
-								db.collection(query.collection).insert(query.document, function (error, results) {
+								db.collection(query.collection).insertOne(query.document, function (error, results) {
 									// error
 										if (error) {
-											callback({success: false, message: error})
+											callback({success: false, message: JSON.stringify(error)})
 											client.close()
 											return
 										}
@@ -666,11 +670,16 @@
 
 					// update
 						if (query.command == "update") {
+							// prevent updating _id
+								if (query.document._id) {
+									delete query.document._id
+								}
+
 							// execute query
-								db.collection(query.collection).update(query.filters, query.document, function(error, results) {
+								db.collection(query.collection).updateOne(query.filters, {$set: query.document}, function(error, results) {
 									// error
 										if (error) {
-											callback({success: false, message: error})
+											callback({success: false, message: JSON.stringify(error)})
 											client.close()
 											return
 										}
@@ -679,7 +688,7 @@
 										db.collection(query.collection).find(query.filters).toArray(function (error, documents) {
 											// error
 												if (error) {
-													callback({success: false, message: error})
+													callback({success: false, message: JSON.stringify(error)})
 													client.close()
 													return
 												}
@@ -699,12 +708,12 @@
 								})
 						}
 
-					// remove
-						if (query.command == "remove") {
-							db.collection(query.collection).remove(query.filters, function(error, results) {
+					// delete
+						if (query.command == "delete") {
+							db.collection(query.collection).deleteOne(query.filters, function(error, results) {
 								// error
 									if (error) {
-										callback({success: false, message: error})
+										callback({success: false, message: JSON.stringify(error)})
 										client.close()
 										return
 									}
