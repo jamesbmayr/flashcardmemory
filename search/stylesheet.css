@@ -1,3 +1,24 @@
+/*** header ***/
+	h1 {
+		font-size: 50px;
+		margin: 10px 0px;
+	}
+
+	h2 {
+		font-size: 25px;
+		margin: 10px 0px;
+		font-style: italic;
+	}
+
+	#no-results {
+		float: left;
+		width: 100%;
+		text-align: center;
+		font-weight: bold;
+		font-size: 30px;
+		font-style: italic;
+	}
+
 /*** decks ***/
 	#decks {
 		float: left;
@@ -45,29 +66,3 @@
 		-o-user-select: none;
 		user-select: none;
 	}
-
-/* forms */
-	#update-username-form, #update-password-form, #delete-user-form {
-		width: calc(100% - 20px);
-		background-color: #aaaaaa;
-		padding: 10px 10px 0px 10px;
-		border-radius: 10px;
-	}
-
-	/* button colors */
-		#create-deck-button {
-			background-color: #1b791f;
-			margin-bottom: 0px;
-		}
-
-		#create-deck-button:focus, #create-deck-button:hover {
-			background-color: #0b550f;
-		}
-
-		#delete-user-button {
-			background-color: #c70f0f;
-		}
-
-		#delete-user-button:focus, #delete-user-button:hover {
-			background-color: #981818;
-		}

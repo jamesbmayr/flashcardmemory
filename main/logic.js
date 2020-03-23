@@ -484,9 +484,19 @@
 						// apply filters
 							var filters = Object.keys(query.filters)
 							for (var f in filters) {
-								documentKeys = documentKeys.filter(function(key) {
-									return DB[query.collection][key][filters[f]] == query.filters[filters[f]]
-								})
+								var property = filters[f]
+								var filter = query.filters[property]
+
+								if (filter instanceof RegExp) {
+									documentKeys = documentKeys.filter(function(key) {
+										return filter.test(DB[query.collection][key][property])
+									})
+								}
+								else {
+									documentKeys = documentKeys.filter(function(key) {
+										return filter == DB[query.collection][key][property]
+									})
+								}
 							}
 
 						// get documents

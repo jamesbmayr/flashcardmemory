@@ -8,7 +8,6 @@ window.addEventListener("load", function() {
 				var SEARCH_FORM         = document.getElementById("search-form")
 					var SEARCH_TEXT     = document.getElementById("search-text")
 					var SEARCH_BUTTON   = document.getElementById("search-button")
-					var SEARCH_ERROR    = document.getElementById("search-error")
 
 			var CONTAINER               = document.getElementById("container")
 				var HEADER              = document.getElementById("header")
@@ -31,13 +30,12 @@ window.addEventListener("load", function() {
 				SEARCH_FORM.addEventListener("submit", submitSearch)
 				function submitSearch(event) {
 					// validate
-						if (!SEARCH_TEXT.value || !window.FUNCTION_LIBRARY.isNumLet(SEARCH_TEXT.value) || SEARCH_TEXT.value.length < 8) {
-							SEARCH_ERROR.innerText = "deck names must be 8+ numbers and letters"
+						if (!SEARCH_TEXT.value || !SEARCH_TEXT.value.length) {
 							return
 						}
 
 					// redirect
-						window.location = "/deck/" + SEARCH_TEXT.value
+						window.location = "../../../../search?q=" + SEARCH_TEXT.value
 				}
 			}
 

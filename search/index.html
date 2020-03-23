@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>flash card memory: search</title>
+		<script node>getAsset("meta")</script>node>
+		<script node>getAsset("fonts")</script>node>
+		<link rel="stylesheet" href="../../../../main/stylesheet.css"/>
+		<link rel="stylesheet" href="../../../../search/stylesheet.css"/>
+		<script src="../../../../main/script.js"></script>
+		<script src="../../../../search/script.js"></script>
+	</head>
+	<body>
+		<div id="navigation">
+			<a id="navigation-home" href="/">home</a>
+			<form id="search-form" method="post" action="javascript:;">
+				<input  id="search-text" type="text" placeholder="deck name"/>
+				<button id="search-button">search</button>
+			</form>
+			<script node>
+				if (REQUEST.session.user) {
+					'<form id="signout-form" method="post" action="javascript:;" visibility=true>' +
+						'<button id="signout-button">sign out</button>' +
+					'</form>'
+				}
+				else {
+					'<a id="navigation-signin" href="/">sign in</a>'
+				}
+			</script>node>
+		</div>
+		<div id="container">
+			<h2>search results for</h2>
+			<h1 id="header">
+				<script node>REQUEST.get ? (REQUEST.get.q || "<i>no query</i>") : "<i>no query</i>"</script>node>
+			</h1>
+			<hr>
+			<div id="decks">
+				<script node>
+					if (!REQUEST.searchResults || !REQUEST.searchResults.length) {
+						'<div id="no-results">[no results]</div>'
+					}
+					else {
+						var decks = []
+						for (var i in REQUEST.searchResults) {
+							var deck = '<div class="deck">' +
+								'<a class="deck-link" href="/deck/' + REQUEST.searchResults[i].name + '">' +
+									'<span>' + REQUEST.searchResults[i].name + '</span>' +
+								'</a>' +
+							'</div>'
+							decks.push(deck)
+						}
+						decks.join("")
+					}
+				</script>node>
+			</div>
+		</div>
+	</body>
+</html>

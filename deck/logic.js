@@ -189,6 +189,44 @@
 			}
 		}
 
+	/* searchDecks */
+		module.exports.searchDecks = searchDecks
+		function searchDecks(REQUEST, RESPONSE, DB, callback) {
+			try {
+				// get search string
+					if (!REQUEST.get || !REQUEST.get.q) {
+						callback({success: false, message: "no search query"})
+						return
+					}
+
+				// query
+					var query = {
+						collection: "decks",
+						command: "find",
+						filters: {name: eval("/.*" + REQUEST.get.q + ".*/i")},
+						document: null,
+						options: {}
+					}
+
+				// find
+					MAIN.accessDatabase(DB, query, function(results) {
+						if (!results.success) {
+							REQUEST.searchResults = []
+							callback(results)
+							return
+						}
+
+						REQUEST.searchResults = results.documents
+						callback(results)
+						return
+					})
+			}
+			catch (error) {
+				MAIN.logError(error)
+				callback({success: false, message: "unable to " + arguments.callee.name})
+			}
+		}
+
 /*** updates ***/
 	/* updateDeck */
 		module.exports.updateDeck = updateDeck

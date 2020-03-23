@@ -159,6 +159,7 @@
 								break
 								case (/^\/user\/?$/).test(REQUEST.url):
 									_302(REQUEST, RESPONSE, "/")
+									return
 								break
 
 							// deck
@@ -184,11 +185,33 @@
 								break
 								case (/^\/deck\/?$/).test(REQUEST.url):
 									_302(REQUEST, RESPONSE, "/")
+									return
+								break
+
+							// search
+								case (/^\/search\/?$/).test(REQUEST.url):
+									try {
+										DECK.searchDecks(REQUEST, RESPONSE, DB, function(results) {
+											RESPONSE.writeHead(200, {
+												"Set-Cookie": String("session=" + REQUEST.session.id + "; expires=" + (new Date(new Date().getTime() + ENVIRONMENT.cookieLength).toUTCString()) + "; path=/; domain=" + ENVIRONMENT.domain),
+												"Content-Type": "text/html; charset=utf-8"
+											})
+											MAIN.renderHTML(REQUEST, "./search/index.html", function (html) {
+												RESPONSE.end(html)
+											})
+										})
+									}
+									catch (error) {_404(REQUEST, RESPONSE, error)}
 								break
 
 							// data
 								case (/^\/data$/).test(REQUEST.url):
 									try {
+										if (!ENVIRONMENT.debug) {
+											_404(REQUEST, RESPONSE)
+											return
+										}
+
 										RESPONSE.writeHead(200, {
 											"Content-Type": "text/plain; charset=utf-8"
 										})
@@ -200,6 +223,7 @@
 							// other
 								default:
 									_404(REQUEST, RESPONSE, REQUEST.url)
+									return
 								break
 						}
 					}
