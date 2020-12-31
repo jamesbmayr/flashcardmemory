@@ -18,3 +18,25 @@
 	#signin-switch:hover, #signup-switch:hover, #signin-switch:focus, #signup-switch:focus {
 		text-shadow: 0px 0px 5px #3377dd;
 	}
+
+/*** j-logo ***/
+	#j-logo {
+		float: right;
+		margin-top: 8px;
+		margin-right: 4px;
+		background-color: transparent;
+		background-image: url("https://jamesmayr.com/resources/j.png");
+		background-repeat: no-repeat;
+		background-size: cover;
+		background-position: center center;
+		height: 32px;
+		width: 32px;
+		cursor: pointer;
+		z-index: 1000;
+		outline: none;
+		filter: drop-shadow(0px 0px 2px #aaaaaa);
+	}
+
+	#j-logo:hover, #j-logo:focus {
+		filter: drop-shadow(0px 0px 5px #dddddd);
+	}
