@@ -103,9 +103,9 @@
 								<meta name="description" content="flashcardmemory"/>\
 								<meta name="author" content="James Mayr"/>\
 								<meta property="og:title" content="flashcardmemory"/>\
-								<meta property="og:url" content="https://flashcardmemory.herokuapp.com"/>\
+								<meta property="og:url" content="https://jamesmayr.com/flashcardmemory"/>\
 								<meta property="og:description" content="flashcardmemory"/>\
-								<meta property="og:image" content="https://flashcardmemory.herokuapp.com/logo.png"/>\
+								<meta property="og:image" content="https://jamesmayr.com/flashcardmemory/banner.png"/>\
 								<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>'
 					break
 					case "fonts":

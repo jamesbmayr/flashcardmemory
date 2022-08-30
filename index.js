@@ -65,7 +65,7 @@
 					}
 					
 				// session
-					if (REQUEST.fileType) {
+					if (REQUEST.fileType || (/^\/ping\/?$/).test(REQUEST.url)) {
 						routeRequest(REQUEST, RESPONSE)
 						return
 					}
@@ -81,6 +81,17 @@
 				// get
 					if (REQUEST.method == "GET") {
 						switch (true) {
+							// ping
+								case (/^\/ping\/?$/).test(REQUEST.url):
+									try {
+										RESPONSE.writeHead(200, {
+											"Content-Type": "text/json"
+										})
+										RESPONSE.end( JSON.stringify({success: true, timestamp: new Date().getTime()}) )
+									}
+									catch (error) {_403(error)}
+								break
+
 							// favicon
 								case (/\/favicon[.]ico$/).test(REQUEST.url):
 								case (/\/icon[.]png$/).test(REQUEST.url):
